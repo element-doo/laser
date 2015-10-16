@@ -1,0 +1,22 @@
+cc => č
+\begin{primjer} => [primjer]
+{\bf Broj podskupova nekog skupa.} => [B]Broj podskupova nekog skupa.[/B]
+I izvan i unutar cc treba biti cc i u $formulama cc treba biti cc$. => I izvan i unutar č treba biti č i u $formulama č treba biti č$.
+Ako je igdje u formulama ili vani bio c|c da nije trebalo biti cc onda bi to bilovako $puno suc|cint ova$. => Ako je igdje u formulama ili vani bio c|c da nije trebalo biti č onda bi to bilovako $puno suc|cint ova$. => 
+
+\Zad[1]
+	Dokazzi identitete
+\ujedan
+	\>A. $\dsize
+	\bin{2n}{2k}\bin{2n-2k}{n-k}\bin{2k}k=\bin{2n}n\bin nk^2$;<<<
+	\>B. $\dsize
+	\suma k0m (-1)^k\bin nk=(-1)^m\bin{n-1}m$.<<<
+\endZad
+
+=> 
+
+[Zadatak 1]
+Dokaži identitete
+A. $\dsize \bin{2n}{2k}\bin{2n-2k}{n-k}\bin{2k}k=\bin{2n}n\bin nk^2$;
+B. $\dsize \suma k0m (-1)^k\bin nk=(-1)^m\bin{n-1}m$.
+[/Zadatak]
