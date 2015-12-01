@@ -1,0 +1,47 @@
+# ako je ispred backslash i neka \rijec
+# onda dodaj NEKO_SMECE da ovi dolje ne matchaju
+
+# jedno fiksno i jedno veliko ili malo slovo u jedno unicode slovo
+(C)\|([Cc])  =>  $1$2
+(C)\|([Hh])  =>  $1$2
+D[Dd]  =>  Đ
+C[Cc]  =>  Č
+C[Hh]  =>  Ć
+Z[Zz]  =>  Ž
+
+# dva slova u jedno unicode slovo
+ss     =>  š
+cc     =>  č
+ch     =>  ć
+zz     =>  ž
+
+
+
+# jedno malo slovo, pipe i opet jedno malo slovo u ono sto je originalno bilo bez pipea
+# pipe se mora escapeat sa backslash pa je zato \|
+# ono sto je u prvom paru zagrada se kopira na $1, ono sto je bilo iza pipea se kopira u $2
+(s)\|(s)  =>  $1$2
+(d)\|(d)  =>  $1$2
+(c)\|(c)  =>  $1$2
+(c)\|(h)  =>  $1$2
+(z)\|(z)  =>  $1$2
+
+# jedno veliko slovo, pipe i onda jedno veliko ili malo slovo u ono sto je bilo u dva para zagrada
+(S)\|([Ss])  =>  $1$2
+(D)\|([Dd])  =>  $1$2
+(C)\|([Cc])  =>  $1$2
+(C)\|([Hh])  =>  $1$2
+(Z)\|([Zz])  =>  $1$2
+
+# makni NEKO_SMECE
+NEKO_SMECE => XXX
+
+math {
+    (D)\|([Dd])  =>  $1$2
+    (C)\|([Cc])  =>  wtds
+}
+
+math {
+    gdfjgdfg => fgsdfgd
+    ss => SHSHSHSHHSHSHSH
+}

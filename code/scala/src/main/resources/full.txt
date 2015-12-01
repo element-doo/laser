@@ -1,0 +1,1935 @@
+\BROJnaslov=3
+
+\naslov{Binomni koeficijenti}
+
+\ppcount=15
+
+\vskip2cm
+{
+\eightpoint
+}
+\sadcount=\ppcount
+
+\hlijevi=7.5cm
+prijeMathTaga ss
+Dd
+$$
+Dd
+uMathTagu ss
+\begin{tabular}{l}
+ \sad 16. Elementarne tehnike prebrojavanja...{2}\\
+ \sad 17. Binomni koeficijenti, definicija i svojstva...{3}\\
+ \sad 18. Pascalov (kineski) trokut...{7}\\
+ \sad 19. Binomni teorem...{8}\\
+ \sad 20. Slozzeniji identiteti...{10}\\
+ \sad 21. Prossirenje Pascalova trokuta...{11}\\
+ \sad 22. Polinomijalna formula...{13}\\
+ \sad 23. SSetnje po cjelobrojnoj ressetki...{15}\\
+ \sad 24. Jednakost polinoma i kombinatorni identiteti...{21}\\
+ \sad 25. Sume s binomnim koeficijentima...{24}\\
+ \sad 26. Matrica binomnih koeficijenata...{28}\\
+ \sad 27. Razmjesstanja...{31}\\
+ \sada 28. Stirlingova aproksimacija i procjena centralnih...\\
+ \sadb binomnih koeficijenata...{32}\\
+ \sadbez Zadatci za vjezzbu ...{34}\\
+ \end{tabular}
+$$
+ }
+
+\bigskip
+
+
+
+\newpage
+
+\tekst
+
+
+
+\pp{Elementarne tehnike prebrojavanja}
+	Prebrojavanje elemenata nekog skupa mozze biti iznimno slozzen zadatak. Da bismo shvatili neke principe tehnike prebrojavanja, upoznat chemo se s temeljnim pravilima.
+
+
+
+	Neka je $S$ bilo koji konaccni skup.
+	Sa $|S|$ chemo oznaccavati \di{broj elemenata u skupu $S$}.
+	Jedna od tehnika prebrojavanja elemenata skupa $S$ jest prikazivanje tog skupa kao \df{disjunktne} unije skupova.
+
+\Okvir[\bb Pravilo zbroja]
+	{Ako je $S=\underset{k=1}\to{\overset{r}\to\cup} S_k$ unija disjunktnih skupova $S_k$,
+	tada vrijedi:
+	$$
+		|S|=\suma k1r |S_k|.
+	$$
+	\skrati{16}
+	}
+
+	Joss che jedan naccin prikazivanja skupova biti od velike vazznosti.
+
+\Okvir[\bb Kartezijev produkt. Pravilo umnosska]
+	{Ako su $S_1$, $S_2$,\dots, $S_r$ bilo koji skupovi, onda se skup
+	$S$ ureddenih $r$-torki elemenata ovih skupova naziva
+	\df{Kartezijev produkt} i oznaccuje sa $S_1\x S_2\x\dots \x S_r$,
+	ili sa $\dsize\prod_{k=1}^r S_k$:
+	$$
+		S=\{(a_1,a_2,\dots,a_r): a_k\in S_k\}
+	$$
+	Broj elemenata skupa $S$ jednak je umnossku broja elemenata skupova $S_k$:
+	$$
+		|S|=\prod_{k=1}^r |S_k|.
+	$$
+	\skrati{16}
+	}
+\praznired
+
+
+\begin{primjer}
+	Neka je $S_1=S_2=\dots=S_r=\{0,1\}$. Onda je element skupa
+	$S=S_1\x S_2\x\dots S_r$ niz nula ili jedinica duljine $r$:
+	$$
+		S=\{(a_1,a_2,\ld,a_r):a_k=0 \text{ ili }a_k=1\}.
+	$$
+	Broj elemenata skupa $S$ je $2^r$. Ponovimo razlog: prvi element
+	ove $r$-torke mozzemo odabrati na dva naccina, drugi na dva naccina i isto tako do posljednjeg $r$-tog.
+\end{primjer}
+
+
+	Prebrojavanje elemenata nekog skupa mozzemo nacciniti tako da ga
+	povezzemo sa skupom kojemu znamo broj elemenata. Povezivanje se vrssi pomochu funkcija koje svakom elementu jednog skupa jednoznaccno pridjeljuje element drugog skupa:
+
+\Okvir[Ekvipotentni skupovi. Pravilo bijekcije]
+	{Kazzemo da su skupovi $S$ i $T$ \df{ekvipotentni} ako postoji bijekcija $f:S\to T$. Za ekvipotentne skupove vrijedi
+	$|S|=|T|$.
+	\skrati{6}
+	}
+
+\begin{primjer}
+	{\bf Broj podskupova nekog skupa.}
+	Neka je $X=\{x_1,x_2,\dots,x_n\}$ zadani skup. Skup svih podskupova od $X$ oznaccujemo s $\p P(X)$. Pokazzimo da postoji bijekcija izmeddu tog skupa i skupa $S$ svih nizova nula i jedinica, duljine $n$.
+
+	Neka je $(a_1,a_2,\dots,a_n)$ niz nula ili jedinica. Jednom takvom nizu pridijelimo podskup $P$ skupa $X$ na sljedechi naccin:
+	$$
+		x_k\in P\iff a_k=1.
+	$$
+	Tako na primjer, ako je $n=5$ i $(1,1,0,1,0)$ niz nula i jedinica duljine 5, onda che njemu odgovarati podskup $\{x_1,x_2,x_4\}$.
+	Occito je ovako definirano preslikavanje $f:S\to \p P(X)$ bijekcija, jednoj $n$-torci odgovara toccno jedan podskup skupa $X$.
+
+	Istaknimo posebno da $n$-torci $(1,1,\dots,1)$ odgovara ccitav skup $X$ (jer je svaki njegov element ukljuccen  u odabir), a $n$-torci $(0,0,\dots,0)$ odgovara \di{prazan skup}, koji je takodder podskup od $X$.
+
+	Prema pravilu bijekcije, broj svih podskupova jednak je broju svih  nizova nula i jedinica. Dakle,
+	$$
+		|\p P(X)|=2^{|X|}.
+	$$
+\end{primjer}
+
+\pp{Binomni koeficijenti, definicija i svojstva}
+
+	Pojam binomnog koeficijenta uvest chemo kroz njegovu vezu s kombinatorikom. Ta definicija omoguchit che jednostavno dokazivanje najvazznijih kombinatornih identiteta koje chemo izvesti u ovom poglavlju.
+
+\Okvir[Binomni koeficijent]
+	{Neka skup $S$ ima $n$ elemenata. Binomni koeficijent, oznaka $\bin nk$, jednak je broju naccina na koji se iz ovog skupa mozze odabrati podskup od $k$ elemenata.}
+
+	Istaknimo neka svojstva binomnih koeficijenata.
+
+	\ppp{Rubne vrijednosti}
+	Postoji samo jedan podskup bez ijednog elementa. Jednako tako, samo jedan podskup ima ukljuccene sve elemente skupa. Zato vrijedi
+	$$
+		\bin n0=\bin nn=1.
+	$$
+
+
+	\ppp{Svojstvo simetrije}
+	Svakom podskupu $A$ od $k$ elemenata odgovara toccno jedan podskup  $\=A$ od $n-k$ elemenata, koji sadrzzava toccno one elemente koje $A$ ne sadrzzava. (Dakle, $\=A=S\setminus A$, komplement skupa $A$).
+	Zato je
+	$$
+		\bin nk=\bin n{n-k}.
+	$$
+
+	\ppp{Zbroj binomnih koeficijenata}
+	Neka je $S_k$ skup svih podskupova od $S$ s toccno $k$ elemenata. Onda je
+	$$
+		|S_k|=\bin nk.
+	$$
+	Skupovi $S_0$, $S_1$,	\dots, $S_n$ su meddusobno disjunktni, a njihova unija daje sve podskupove skupa $S$:
+	$$
+		\p P(S)=S_0\cup S_1\cup\dots\cup S_n.
+	$$
+	Zato je
+	$$
+		2^n=|\p P(S)|
+		=\suma k0n |S_k|
+		=\suma k0n \bin  nk.
+	$$
+
+
+\ppp{Rekurzivna relacija}
+	Binomni koeficijenti zadovoljavaju na tisuche manje ili visse interesantnih identiteta. Izdvojit chemo i dokazati najvazznije meddu njima. Prvi je na popisu sljedechi identitet.
+
+\Okvir[Pascalova formula]
+	{Vrijedi sljedechi identitet:
+	$$
+	\tagbr{1.2.2}
+		\bin nk=\bin{n-1}{k-1}+\bin{n-1}{k}.
+		\tag
+	$$
+	\skrati{12}
+	}
+
+	Navest chemo kombinatorni dokaz. U tu svrhu izdvojimo
+	jedan istaknuti element $x$ skupa $S$. Podskupove
+	skupa $S$ koji imaju toccno $k$ elemenata mozzemo rastaviti u dvije disjunktne klase, vech prema tome sadrzzavaju li element $x$ ili ne, $S_k=A\cup B$. U klasi $A$ nalaze se oni podskupovi koji sadrzzavaju element $x$, a u klasi $B$ oni podskupovi koji ga ne sadrzze. Buduchi su $A$ i $B$ disjunktni, vrijedit che:
+	$$
+		|S_k|=\bin nk=|A|+|B|.
+	$$
+
+	Prebrojimo sad broj podskupova u klasi $A$.
+	Buduchi da svaki od njih sadrzzava element $x$, tih podskupova ima onoliko na koliko naccina preostalih $(k-1)$ elemenata mozzemo izabrati iz ostatka skupa $S$, jer je jedan element, $x$, vech izabran. Zato je $|A|=\bin{n-1}{k-1}$.
+
+	Skup $B$ sastoji se od onih podskupova duljine $k$ koji ne sadrzzavaju element $x$. To znacci da elemente tih podskupova mozzemo birati po volji meddu $(n-1)$ elementom skupa $S$. Zato je $|B|=\bin{n-1}k$. Prema tome, vrijedi:
+	$$
+		\bin nk=\bin{n-1}{k-1}+\bin{n-1}{k}
+	$$
+	i tvrdnja je dokazana.
+
+
+\ppp{Raccunanje binomnog koeficijenta}
+	Broj naccina na koji mozzemo izabrati povjerenstvo od $k$ cclanova iz skupa od $n$ osoba i nakon toga odabrati predsjednika povjerenstva je
+	$$
+		\bin nk\.k.
+	$$
+	Isti se postupak mozze nacciniti i tako da najprije odaberemo predsjednika, a zatim cclanove njegova povjerenstva iz ostatka od $n-1$ osobe:
+	$$
+		n\.\bin {n-1}{k-1}.
+	$$
+	Dakle, vrijedi:
+	$$
+		\bin nk=\rr nk\bin{n-1}{k-1}.
+	$$
+	Iteriranjem ove rekurzivne relacije dobivamo:
+
+\Okvir[Eksplicitna formula za binomni koeficijent]
+	{
+	$$
+	\tagbr{1.2.3}
+		\bin nk=\rr nk\.\rr{n-1}{k-1}\cdots\rr{n-k+1}1
+		=\rr{n(n-1)\cdots(n-k+1)}{k!}
+		\tag
+	$$
+	\skrati{14}
+	}
+
+	Ovaj se razlomak mozze napisati pomochu faktorijelne funkcije:
+
+\Okvir[Prikaz binomnog koeficijenta pomochu faktorijela]
+	{
+	$$
+	\tagbr{1.2.4}
+		\bin nk=\rr{n!}{k!(n-k)!}
+	\tag
+	$$
+	\skrati{14}
+	}
+
+	Formula \zref{1.2.4} izgleda jednostavnije, no za raccunanje je
+	prikladnija \zref{1.2.3}. Naime, prije raccunanja je korisno skratiti brojnik i nazivnik, a prvi postupak skrachivanja upravo je prelazak sa zadnje formule na prethodnu.
+
+	Pri raccunanju ``malenih'' binomnih koeficijenata, koristimo se svojstvom simetrije i nakon toga primjenjujemo formulu \zref{1.2.3}. Tako na primjer,
+	binomni koeficijent
+	$$
+		\bin{10}7=\rr{10\.9\.8\.7\.6\.5\.4}{1\.2\.3\.4\.5\.6\.7}
+	$$
+	nechemo pocceti raccunati krachenjem ovog razlomka, vech chemo prije toga primijeniti formulu
+	$$
+		\bin{10}7=\bin {10}3=\rr{10\.9\.8}{1\.2\.3},
+	$$
+	odakle se lako issccitava vrijednost 120 za ovaj binomni koeficijent.
+
+
+
+\ppp{Joss jedna korisna relacija}
+	Ako poopchimo naccin biranja iz prethodnog primjera, i umjesto predsjednika povjerenstva odabiremo uzze vodstvo koje ima $r$ cclanova, dobit chemo sljedechi identitet:
+	$$
+		\bin nk\bin kr=\bin nr\bin{n-r}{k-r}.
+	$$
+	Uvjeri se u istinitost ove formule, rabechi prikaz binomnih koeficijenata pomochu faktorijelne funkcije.
+
+
+\ppp{Dijagonalna suma}
+\label{dijag}
+	Vrijede sljedechi identiteti:
+
+\Okvir[Zbroj binomnih koeficijenata]
+	{
+	$$
+	\gather
+	\tagbr{dijagind}
+		\bin kk+\bin{k+1}k+\ld+\bin{n}{k}=\bin{n+1}{k+1},
+	\tag\\
+		\bin k0+\bin k1+\bin k2+\ld+\bin{k+n}n=\bin{n+k+1}n.
+	\tagbr{diagonal2}
+	\tag
+	\endgather
+	$$
+	\skrati{12}
+	}
+
+	Prvi identitet mozze se dokazati sljedechim razmissljanjima.
+	S desne strane napisan je broj naccina za odabir $(k+1)$ elementa iz skupa $\{1,2,\dots,n+1\}$ od $(n+1)$ elementa. Sad te odabire podijelimo u \di{disjunktne}
+	klase, prema iznosu najvecheg elementa u podskupu. Iznos tog  elementa kreche se u rasponu od $(k+1)$ do $(n+1)$, jer podskup sadrzzava $(k+1)$ element iz zadanog skupa $\{1,2,\dots,n+1\}$.
+	Ako je najvechi element upravo $(k+1)$, onda preostale cclanove mozzemo odabrati na $\bin kk$ naccina. Ako je najvechi element $(k+2)$, preostalih $k$ mozzemo odabrati na $\bin{k+1}k$ naccina. Opchenito, ako je najvechi element jednak $i+1$, $k\le i\le n$. onda preostalih $k$ elemenata moramo izabrati iz skupa $\{1,2,\dots,i\}$, pa to mozzemo ucciniti na $\bin ik$ naccina. Odatle slijedi formula.
+
+	Druga se formula mozze dobiti iz prve
+	tako da se $n$ zamijeni sa $(n+k)$, jer za svaki pribrojnik vrijedi:
+	$$
+		\bin{k+i}i=\bin{k+i}k.
+	$$
+
+
+	Ipak, korisno je ponoviti kombinatorno razmissljanje analogno onom u prethodnoj formuli. Desna strana odgovara broju naccina za izbor $n$ elemenata iz skupa $\{1,2,\dots,n+k+1\}$.
+	Te podskupove koji sadrzzavaju $n$ elemenata mozzemo podijeliti u disjunktne klase, vech prema tome \di{koliki je najvechi element koji nije ukljuccen u podskup}. Ako je to element $n+k+1$, to znacci da $n$ elemenata moramo izabrati unutar skupa $\{1,2,\dots,n+k\}$, ssto mozzemo ucciniti na $\bin{k+n}n$ naccina (tu je $i=n$). Pretpostavimo da je najvechi element koji nije ukljuccen u podskup jednak $k+i+1$, $0\le i\le n$. To znacci da svi elementi $k+i+2$, $k+i+3$,\dots $k+n+1$ pripadaju podskupu. Njih ima ukupno $n-i$. Zato se preostalih $i$ elemenata treba odabrati unutar podskupa $\{1,2,\dots,k+1\}$, ssto se mozze ucciniti na $\bin{k+1}i$ naccina. Odatle slijedi formula.
+
+	Formula \zref{diagonal2} naziva se \di{dijagonalna}. Razlog tomu vidi se iz graficckog prikaza binomnih koeficijenata.
+
+
+
+\pp{Pascalov (kineski) trokut}
+
+	Binomni se koeficijenti mogu napisati u obliku tablice koju nazivamo \df{Pascalov trokut}, ili \df{kineski trokut}. Njega mozzemo izvesti na temelju ``rubnih'' vrijednosti:
+	$$
+		\bin n0=\bin nn=1
+	$$
+	i rekurzivne formule \zref{1.2.2}. U tablici binomnih koeficijenata prvi i zadnji element u svakom retku jednak je jedinici, a svaki preostali element jednak je zbroju dvaju elemenata iz prethodnog retka: elementa toccno iznad i onog lijevo od toga. Na primjer, u retku $n=6$ che biti za $k=3$ ispunjeno
+	$$
+		\bin 63=\bin 53+\bin 52=10+10=20.
+	$$
+	Zbog svojstva simetrije binomnih koeficijenata, brojeve u retku potrebno je raccunati samo do sredissnjeg elementa.
+	Time su odreddeni i elementi u ostatku toga retka.
+
+	$$
+	\arraycolsep=3pt
+	\def\arraystretch{1.2}
+	\begin{array}{l|rrrrrrrrrrrr}
+	\raise-4pt\hbox{$n$}\ k\stup08&0&1&2&3&4&5&6&7&8&9&10\\
+	\hline
+	0&1&\\
+	1&1&1&\\
+	2&1&2&1&\\
+	3&1&3&3&1&\\
+	4&1&4&6&4&1&\\
+	5&1&5&10&10&5&1&\\
+	6&1&6&15&20&15&6&1&\\
+	7&1&7&21&35&35&21&7&1&\\
+	8&1&8&28&56&70&56&28&8&1\\
+	9&1&9&36&84&126&126&84&36&9&1\\
+	\llap10&1&10&45&120&210&252&210&120&45&10&1\\
+	\vdots&\\
+	\end{array}
+	$$
+
+
+
+
+\begin{primjer}
+	Dokazzi identitet:
+	$$
+		\suma k0n \bin{n+k}n2^{-k}=2^n.
+	$$
+\end{primjer}
+
+\poc
+	Dat chemo kombinatorni dokaz za identitet napisan u obliku:
+	$$
+		\suma k0n \bin{n+k}n2\.2^{n-k}=2^{2n+1}.
+	$$
+
+	S desne strane prepoznajemo broj svih binarnih nizova
+	(sastavljenih od nula i jedinica)
+	duljine $2n+1$. Pokazzimo da lijeva strana broji iste elemente.
+
+	Svaki niz duljine $2n+1$ sadrzzava najmanje $(n+1)$ nula ili najmanje $(n+1)$ jedinicu, ali ne oboje. Nazovimo takvu $(n+1)$ po redu nulu ili jedinicu {\it istaknuti element}.
+
+	 Neka je $0\le k\le n$ odabran po volji. Svaki niz pregledavamo slijeva nadesno. $k$-ti sumand u sumi na lijevoj strani predstavlja broj onih nizove kod kojih se istaknuti element javlja toccno na $(n+k+1)$-om mjestu.
+
+	 Jedan takav niz mora zadovoljavati sljedeche uvjete:
+%	 \begin{itemize}
+	 \item{$\bullet$} Na prvih $(n+k)$ mjesta rasporeddeno je $n$ simbola jedne vrste i $k$ druge vrste, to se mozze ucciniti na
+	 $\bin{n+k}k$ naccina,
+	 \item{$\bullet$} Na $(n+k+1)$-om mjestu nalazi se istaknuti element, dva su mogucha odabira  za taj element,
+	 \item{$\bullet$} Preostalih $(n-k)$ elemenata, za koje se ne postavljaju nikakvi uvjeti mogu se odabrati na $2^{n-k}$ naccina.
+%	 \end{itemize}
+	 Time je identitet dokazan.
+\kraj
+
+
+
+\pp{Binomni teorem}
+
+	Naziv \di{binomni koeficijenti} ovi su brojevi dobili temeljem sljedechih formula, poznatih od davnina:
+	$$
+	\gather
+		(x+y)^2=x^2+2xy+y^2\\
+		(x+y)^3=x^3+3x^2y+3xy^2+y^3\\
+		(x+y)^4=x^4+4x^3y+6x^2y^2+4xy^3+y^4\\
+		\vdots\\
+	\endgather
+	$$
+
+\Okvir[\bb Binomni teorem]
+	{Za svaki prirodni broj $n$ vrijedi formula:
+	$$
+		(x+y)^n=\suma k0n\bin nk x^ky^{n-k}.
+	$$
+	\skrati{10}
+	}
+
+	Izvod ove formule je jednostavan. Lijeva strana je umnozzak $n$ identiccnih faktora:
+	$$
+		(x+y)(x+y)\cdots(x+y).
+	$$
+	Kad pomnozzimo sve ove cclanova, trebamo ih grupirati prema broju $x$-ova ukljuccenih u svaki pribrojnik. Kojeg je izgleda svaki od pribrojnika? On se sastoji od umnosska $x$-ova i $y$-ova, a imat che oblik $x^ky^{n-k}$ kad god iz toccno $k$ faktora odaberemo $x$ (a iz ostalih $y$).
+	Postoji toccno
+	$\bin nk$ takvih pribrojnika, jer je upravo toliko naccina da se $k$ elemenata $x$ odabere iz poccetnih $n$ umnozzaka.
+
+\ppp{Identiteti za sumu binomnih koeficijenata}
+	Odabir $x=1$, $y=1$, a onda $x=-1$, $y=1$ daje sljedecha dva identiteta, od kojih smo prvi vech dokazali:
+	$$
+	\gather
+		\suma k0n\bin nk=2^n,\\
+		\suma k0n (-1)^k\bin nk=0.
+	\endgather
+	$$
+
+\ppp{Broj podskupova zadanog skupa}
+	Interpretacija zadnje formule je: podskupova s parnim brojem elemenata ima uvijek jednako mnogo kao i podskupova s neparnim brojem elemenata, i taj je broj jednak $2^{n-1}$. I dok je to za neparni $n$ occito, jer svaki ``neparni'' podskup odredduje jedan ``parni'', za parni $n$ ovo svojstvo binomnih koeficijenata nije ni po ccemu evidentno. Npr:
+	$$
+	\gather
+		1+1=2\\
+		1+6+1=4+4\\
+		1+15+15+1=6+20+6\\
+		1+28+70+28+1=8+56+56+8\\
+		\vdots\\
+	\endgather
+	$$
+
+	Vech smo pokazali da broj podskupova skupa od $n$ elemenata iznosi $2^n$, sa sljedechim obrazlozzenjem: svaki element skupa mozze pripadati ili ne pripadati nekom podskupu, zato je $2^n$ moguchih izbora. Na isti naccin mozzemo zakljucciti da je broj svih podskupova s neparnim brojem elemenata jednak $2^{n-1}$. Naime, prvi element skupa mozzemo ukljucciti u takav podskup ili ne, po
+	vlastitom odabiru. Isto to mozzemo ucciniti s drugim, trechim, itd., sve do $(n-1)$-og elementa. Time smo dosad konstruirali $2^{n-1}$ razliccitih podskupova: to su \di{svi podskupovi} skupa $\{a_1,a_2,\ld,a_{n-1}\}$. Meddutim, polozzaj zadnjeg elementa
+	$a_n$ jednoznaccno je odredden prethodnim odabirima! Ako smo odabrali dosad neparan broj elemenata, $a_n$ ne smije pripadati podskupu. Ako smo odabrali dosad paran broj elemenata, $a_n$ mora pripadati tom podskupu. Zato je broj podskupova s neparnim brojem elemenata jednak $2^{n-1}$.
+
+	Naravno da isti zakljuccak vrijedi i za podskupove s parnim brojem elemenata, i njihov je broj jednak $2^{n-1}$.
+
+	To mozzemo zakljucciti i iz ccinjenice da je broj svih podskupova jednak $2\.2^{n-1}$.
+
+\begin{primjer}
+	Dokazzimo da za $r<n$ vrijedi identitet:
+	$$
+		\sum_{r\le k\le n}(-1)^k\bin nk\bin kr=0.
+	$$
+
+	Iskoristit chemo najprije Svojstvo 6:
+	$$
+		\bin nk\bin kr=\bin nr\bin{n-r}{k-r}.
+	$$
+	Dobivamo
+	$$
+	\align
+		\sum_{r\le k\le n}(-1)^k\bin nk\bin kr
+		&=\sum_{r\le k\le n}(-1)^k\bin nr\bin{n-r}{k-r}\\
+		&=(-1)^r\bin nr\sum_{0\le k-r\le n-r}
+		\bin{n-r}{k-r}(-1)^{k-r}\\
+		&=(-1)^r\bin nr\sum_{0\le i\le n-r}
+		\bin{n-r}{i}(-1)^{i}\\
+		&=(-1)^r\bin nr(1-1)^{n-r}=0.
+	\endalign
+	$$
+\end{primjer}
+
+
+
+\pp{Slozzeniji identiteti}
+
+\Okvir[\bb Vandermondeov identitet$^{1}$]
+	{Za svaki prirodni broj $n$ vrijedi identitet:
+	$$
+	\label{vdm}
+		\bin {r+s}n=\suma k0n\bin rk\bin s{n-k}.
+		\tag
+	$$
+	\skrati{14}
+	}
+
+	\footnotetext[1]{Alexandre-Th\'eophile Vandermonde (1735--1796).}
+
+	Na ovaj identitet treba gledati kao na \di{identitet dvaju polinoma}, dakle, $r$ i $s$ su nezavisne varijable. Naravno, vrijednosti tih polinoma slijeva i zdesna podudarat che se kakve god vrijednosti za varijable $r$ i $s$ odabrali.
+
+	Identitet chemo dokazati najprije za cjelobrojne nenegativne vrijednosti od $r$ i $s$. Tada lijeva strana predstavlja broj odabira $n$ elemenata iz unije dvaju skupova $R$ i $S$, za koje vrijedi $|R|=r$, $|S|=s$. Ti se podskupovi mogu podijeliti u disjunktne klase, prema broju $k$ elemenata koji su uzeti iz prvog skupa. Iz skupa $R$ se $k$ elemenata mozze odabrati na $\bin rk$ naccina, a preostalih $n-k$ elemenata iz skupa $S$ na $\bin s{n-k}$ naccina. Zbrajanjem po svim moguchnostima za $k$ dobivamo:
+	$$
+			\bin {r+s}n=\suma k0n\bin rk\bin s{n-k}.
+	$$
+	Time je formula \zref{vdm} dokazana za $r,s\in\eN_0$. Meddutim, ako se vrijednosti dvaju polinoma podudaraju u svim prirodnim brojevima, tada se oni identiccki podudaraju.
+
+\begin{primjer}
+	Poseban je sluccaj Vandermondeova identiteta sljedecha poznata formula:
+	$$
+		\suma k0n\bin nk^2=\bin{2n}n.
+	$$
+
+	Naime, zbog svojstva simetrije binomnih koeficijenata pribrojnici se mogu napisati u obliku:
+	$$
+		\suma k0n\bin nk\bin n{n-k}
+	$$
+	i sad je dovoljno primijeniti Vandermondeov identitet za $r=s=n$.
+\end{primjer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pp{Prossirenje Pascalova trokuta}
+
+	Elementi Pascalova trokuta zadovoljavaju rekurzivnu relaciju:
+	$$
+		\bin {n+1}k=\bin nk+\bin n{k-1},\qq k\ge0.
+	$$
+	Svaki element trokuta jednak je zbroju dvaju elmenata iz prethodnog retka koji se nalaze iznad i lijevo iznad tog elementa.
+
+	Ovaj identitet automatski se prenosi na identitet polinoma:
+	$$
+		\bin {r+1}k=\bin rk+\bin r{k-1},\qq k\ge0.
+	$$
+	Lijeva i desna strana su polinomi po varijabli $r$, stupnja k. Dakle, ovaj identitet vrijedi za bilo koju realnu vrijednost varijable $r$, ne samo na skupu prirodnih brojeva.
+
+	Binomnu formulu mozzemo napisati u obliku:
+	$$
+		\suma k0\ty \bin rk(1+x)^k.
+	$$
+	Ako je $r$ prirodan, $r=n$, onda su u ovoj sumi svi cclanovi za koje je $k>n$ jednaki nuli, jer su odgovarajuchi binomni koeficijenti jednaki nuli. Time se ona svodi na klasiccnu binomnu formulu.
+
+	Sad bismo htjeli prossiriti Pascalov trokut i vrijednost binomne formule za negativne cjelobrojne vrijednosti varijable $r$.
+
+	Za $r=0$ binomna formula glasi:
+	$$
+		(1+x)^0=1
+	$$
+	pa je prirodno da su svi elementi u nultom retku Pascalova trokuta jednaki nuli, osim prvog.
+
+	Za $r=-1$ binomna formula prelazi u beskonaccnu sumu:
+	$$
+		(1+x)^{-1}=1-x+x^2-x^3+x^4-x^5+\ld.
+	$$
+
+
+	Nadopunimo Pascalov trokut s tim elementima:
+	$$
+	\begin{array}{r|rrrrrrrrrrr}
+	n/k&0&1&2&3&4&5&6&7&\dots\\
+	\hline
+	-1&1&-1&1&-1&1&-1&1&-1&\dots\\
+	0&1&0&0&0&0&0&0&0&\dots\\
+	1&1&1&0&0&0&0&0&0&\dots\\
+	2&1&2&1&0&0&0&0&0&\dots\\
+	3&1&3&3&1&0&0&0&0&\dots\\
+	4&1&4&6&4&1&0&0&0&\dots\\
+	5&1&5&10&10&5&1&0&0&\dots\\
+	\vdots&\vdots\\
+	\end{array}
+	$$
+
+	Ovaj se trokut mozze po istim pravilima graditi i za ostale negativne potencije $r$. Prvi element u svakom retku jednak je jedinici, a sljedechi se dobivaju iz formule:
+	$$
+		\bin rk=\bin{r+1}k-\bin r{k-1},\qq k\ge 1.
+	$$
+	Prossirena tablica imat che sljedeche retke:
+	$$
+	\begin{array}{r|rrrrrrrrrrr}
+	n/k&0&1&2&3&4&5&6&7&\dots\\
+	\hline
+	\vdots&\vdots\\
+	-5&1&-5&15&-35&70&-126&210&-330&\dots\\
+	-4&1&-4&10&-20&35&-56&84&-120&\dots\\
+	-3&1&-3&6&-10&15&-21&28&-36&\dots\\
+	-2&1&-2&3&-4&5&-6&7&-8&\dots\\
+	-1&1&-1&1&-1&1&-1&1&-1&\dots\\
+	0&1&0&0&0&0&0&0&0&\dots\\
+	1&1&1&0&0&0&0&0&0&\dots\\
+	2&1&2&1&0&0&0&0&0&\dots\\
+	3&1&3&3&1&0&0&0&0&\dots\\
+	\vdots&\vdots\\
+	\end{array}
+	$$
+
+	Binomni koeficijenti za negativne vrijednosti od $r$ mogu se izraziti preko uobiccajenih. Ako je $r=-n$, onda imamo:
+	$$
+	\align
+	\bin{-n}k&=\rr{(-n)(-n-1)\cdots(-n-k+1)}{k!}\\
+	&=(-1)^k\.\rr{n(n+1)\cdots(n+k-1)}{k!}\\
+	&=(-1)^k\bin{n+k-1}k.
+	\endalign
+	$$
+
+	Kako glasi binomna formula za takve vrijednosti eksponenta?
+	CCitajuchi iz redaka ove tablice, i primjenjujuchi zapis identiccan prethodnima, trebalo bi vrijediti:
+	$$
+		(1+x)^{-n}=1+\bin{-n}1x+\bin{-n}2x^2+\bin{-n}3x^3+\ld.
+	$$
+	U sljedechem poglavlju uvjerit chemo se u istinitost ovih formula.
+
+\begin{primjer}
+	Ispissimo nekoliko prvih cclanova izraza $(1+x)^{-3}$.
+\end{primjer}
+
+\poc
+	Iz odgovarajucheg retka ove tablice ccitamo:
+	$$
+		(1+x)^{-3}=1-3x+6x^2-10x^3+15x^4-21x^5+\ld.
+	$$
+	Formula je istinita ako je $|x|<1$, red je konvergentan za te vrijednosti argumenta.
+
+\pp{Polinomijalna formula}
+
+	Namjeravamo poopchiti binomnu formulu
+	$$
+		(x+y)^n=\bin n0x^n+\bin n1 x^{n-1}y+\ld+\bin n{n-1}xy^{n-1}+\bin nn y^n
+	$$
+	na potenciju visse od dva pribrojnika. Naccin izvoddenja opche formule ilustrirajmo najprije na jednostavnijem sluccaju.
+
+\begin{primjer}
+	Vrijedi:
+	$$
+	\align
+		(x+y+z)^3&=x^3+y^3+z^3+3x^2y+3xy^2+3x^2z\\
+		&\qq+3xz^2+3y^2z+3yz^2+6xyz.
+	\endalign
+	$$
+\end{primjer}
+
+\poc
+	Primijetimo najprije da je izraz simetriccan po svim varijablama. Zamjenom bilo koje dvije ili ciklicckom zamjenom svih triju varijabli, desna strana ostaje nepromijenjena.
+
+	Meddu cclanovima s desne strane tri su razliccita oblika: $x^3$, $3x^2y$, $6xyz$. Ostali cclanovi dobivaju se zamjenom varijabli iz nekog od ovih triju (zapravo, prvih dvaju). Zato trebamo objasniti zassto se u izrazu zdesna javljaju bass ta tri cclana.
+
+	Pomnozzimo li cclanove u umnossku
+	$$
+		(x+y+z)^3=(x+y+z)(x+y+z)(x+y+z)
+	$$
+	svaki sa svakim, dobit chemo 27 pribrojnika. Svaki od njih dobiva se odabirom po jedne varijable iz svakog od tri faktora. To znacci da che se $x^3$ pojaviti zdesna samo jednom, jer se dobiva tako da se u svakom faktoru odabere cclan $x$. Meddutim, $x^2y$ mozze se odabrati na tri naccina. Radi se o tome da $y$ mozzemo odabrati iz bilo kojeg od triju faktora, a iz preostala dva faktora onda biramo $x$. Konaccno, na koliko naccina mozzemo meddu cclanovima sume dobiti umnozzak $xyz$? CClan $x$ mozzemo odabrati iz  bilo kojeg od triju faktora, nakon toga $y$ iz bilo kojeg od dva preostala, a $z$ iz trecheg faktora. Tako je ukupan broj naccina jednak ssest.
+
+	Time je formula dokazana.
+
+	Primijetimo joss da je zbroj koeficijenata u izrazu zdesna jednak 27, jer upravo toliko elementarnih pribrojnika postoji.
+\kraj
+
+
+\ppp{Polinomijalna formula}
+	Poopchit chemo sad ovu formulu. Umjesto tri pribrojnika, promotrit chemo $r$ pribrojnika koja, naravno, moramo razlikovati prema indeksima. Umjesto eksponenta 3, uzet chemo opchi $n$.
+	Prema tome, trazzimo formulu za potenciju:
+	$$
+		(x_1+x_2+\ld+x_r)^n.
+	$$
+	Pribrojnici u razvijenoj formi ovog izraza imaju oblik
+	$$
+		x_1^{k_1}x_2^{k_2}\cdots x_r^{k_r}
+	$$
+	pri ccemu za eksponente vrijedi:
+	$$
+		k_1\ge0,\q
+		k_2\ge0,\q,\dots,\q
+		k_r\ge0,\q
+		k_1+k_2+\ldots+k_r=n.
+	$$
+	Zato che formula imati oblik
+	$$
+		(x_1+x_2+\ld+x_r)^n=\sum C(k_1,k_2,\ld,k_r)x_1^{k_1}x_2^{k_2}\cdots x_r^{k_r}.
+	$$
+	Preostaje nam odrediti formulu za nepoznati koeficijent u ovom prikazu.
+
+	Kao i prije, opchi cclan se dobije tako da se iz svakog od $n$ identiccnih faktora $(x_1+x_2+\ld+x_r)$ odabere toccno jedan cclan.
+	Moramo odgovoriti na pitanje: na koliko naccina se iz skupa od $n$ takvih faktora mozze odabrati:
+	$$
+	\align
+		&\hbox{cclan $x_1$ bira se $k_1$ puta,}\\
+		&\hbox{cclan $x_2$ bira se $k_2$ puta,}\\
+		&\q\vdots\\
+		&\hbox{cclan $x_r$ bira se $k_r$ puta.}\\
+	\endalign
+	$$
+	CClan $x_1$ mozzemo odabrati iz skupa od $n$ faktora $k_1$ puta na
+	$$
+		\bin{n}{k_1}
+	$$
+	naccina. Nakon toga, meddu preostalih $n-k_1$ cclanova, cclan $x_2$ mozzemo odabrati $k_2$ puta na
+	$$
+		\bin{n-k_1}{k_2}
+	$$
+	naccina. Nastavimo li ovaj postupak analizom preostalih cclanova, trazzeni koeficijent bit che jednak umnossku svih ovako dobivenih cclanova, i iznosit che:
+	$$
+		C(n;k_1,k_2,\ld,k_r)
+		=\bin n{k_1}
+		\bin{n-k_1}{k_2}
+		\bin{n-k_1-k_2}{k_3}\cdots
+		\bin{n-k_1-k_2-\ld-k_{r-1}}{k_r}.
+	$$
+
+\ppp{Polinomijalni koeficijent}
+	Izvedimo jednostavniji prikaz za ovaj koeficijent.
+	$$
+	\align
+	C(n;k_1,k_2,\ld,k_r)&=\bin n{k_1}
+		\bin{n-k_1}{k_2}
+		\bin{n-k_1-k_2}{k_3}\cdots
+		\bin{n-k_1-k_2-\ld-k_{r-1}}{k_r}\\
+		&=\rr{n!}{k_1!(n-k_1)!}\.
+		\rr{(n-k_1)!}{k_2!(n-k_1-k_2)!}\.
+		\rr{(n-k_2)!}{k_3!(n-k_1-k_2-k_3)!}\.\ldots\\
+		&\qq\qq\.
+		\rr{(n-k_1-k_2-\ld-k_{r-1})!}{k_r!(n-k_1-k_2-\ld-k_r)!}
+	\endalign
+	$$
+	Primijetimo da je $n=k_1+k_2+\ld+k_r$ pa je $(n-k_1-k_2-\ld-k_r)!=1$. U ovom umnossku krate se svi nutarnji cclanovi, pa dobivamo:
+	$$
+		C(n;k_1,k_2,\ld,k_r)=\rr{n!}{k_1!k_2!\.\ld\.k_r!}.
+	$$
+
+\Okvir[Polinomijalni koeficijent]
+	{Koeficijent $C(n;k_1,\ld,k_r)$ naziva se \df{polinomijalni koeficijent} i oznaccuje s:
+	$$
+		\bin n{k_1,k_2,\ld,k_r}=\rr{n!}{k_1!k_2!\.\ld\.k_r!}.
+	$$
+
+	\skrati{14}
+	}
+
+
+	Sad mozzemo iskazati polinomijalnu formulu u njezinu konaccnom obliku.
+
+\Okvir[Polinomijalna formula]
+{
+\begin{teorem}
+	Neka su $x_1,x_2,\ld,x_r$ po volji odabrani realni brojevi, a $n$ prirodan broj. Onda vrijedi \df{polinomijalna formula}:
+	$$
+		(x_1+x_2+\ld+x_r)^n
+		=\sum _{\Sb k_1,k_2,\ld,k_r\ge0\\k_1+k_2+\ld+k_r=n\endSb}
+		\bin n{k_1,k_2,\ld,k_r}
+		x_1^{k_1}
+		x_2^{k_2}\cdots
+		x_r^{k_r}.
+	$$
+\end{teorem}
+
+\skrati{14}
+}
+
+
+	Za $r=2$ ova se formula mora podudarati s binomnom. Zaista, vrijedi:
+	$$
+		C(n;k_1,k_2)=\bin{n}{k_1,k_2}
+		=\rr{n!}{k_1!k_2!}
+		=\rr{n!}{k_1!(n-k_1)!}=\bin n{k_1},
+	$$
+	pa je
+	$$
+		\sum _{\Sb k_1,k_2\ge0\\k_1+k_2=n\endSb}
+		\bin n{k_1,k_2}x_1^{k_1}
+		x_2^{k_2}=
+		\sum_{k_1=0}^n\bin n{k_1}x_1^{k_1}x_2^{n-k_1},
+	$$
+	i obje se formule podudaraju.
+
+
+
+
+
+\pp{SSetnje po cjelobrojnoj ressetki}
+
+
+\ppp{SSetnja}
+	U koordinatnom sustavu izdvojimo toccke s cjelobrojnim koordinatama. Taj chemo skup zvati \df{cjelobrojna ressetka}.
+
+	Mnogi se kombinatorni problemi mogu interpretirati promatrajuchi \di{ssetnje} po cjelobrojnoj ressetki. Ovdje chemo promotriti ssetnje
+	vrlo jednostavnog oblika i povezati ih s binomnim koeficijentima. Na temelju toga dat chemo alternativni naccin za dokaz mnogih kombinatornih identiteta.
+
+	Pretpostavit chemo da nassa ssetnja poccinje u ishodisstu i da su dopusstena samo dva naccina prelaska iz jedne toccke u drugu: \di{udesno}, iz toccke $(i,j)$ u $(i+1,j)$, te \di{prema gore}, iz
+	toccke $(i,j)$ u $(i,j+1)$. Ovdje su $i$ i $j$ nenegativni cijeli brojevi. Neka je $\8D$ oznaka za korak udesno, a $\8G$ za onaj prema gore.
+
+	Na slici je nacrtan graf jedne ssetnje koja kreche iz ishodissta i zavrssava u toccki s koordinatama $(m,n)$
+
+\Umetak[2]
+%\NemaSlike
+\Slika 03-01[5cm]SSetnja po cjelobrojnoj ressetki.[]
+\endUmetak
+
+	Postavlja se pitanje: {\it koliko razliccitih ssetnji ima koje povezuju toccke $(0,0)$ i $(m,n)$?} Oznaccimo sa $L(m,n)$ taj nepoznati broj.
+
+	Odgovor na ovo pitanje je lako dati. U tu svrhu izvedimo rekurzivnu relaciju koju zadovoljavaju brojevi $L(m,n)$.
+
+	Rubni uvjeti su:
+	$$
+	\tagbr{1.4.1}
+		L(i,0)=L(0,j)=1
+		\tag
+	$$
+	jer se u polozzaj $(i,0)$, odnosno $(0,j)$ mozze stichi iz ishodissta samo na jedan naccin.
+
+\Umetak[2]
+%\NemaSlike
+\Slika 03-02[5cm]Rekurzivna relacija za obiccnu ssetnju.[]
+\endUmetak
+
+	CCestica mozze stichi u toccku $(m,n)$ na dva razliccita naccina, ili iz toccke $(m-1,n)$ pomakom udesno, ili iz toccke $(m,n-1)$ pomakom prema gore. Zato mozzemo napisati rekurzivnu relaciju:
+	$$
+	\tagbr{1.4.2}
+		L(m,n)=L(m-1,n)+L(m,n-1).
+		\tag
+	$$
+
+	Postavlja se pitanje: je li funkcija $L$ jednoznaccno odreddena uvjetima \zref{1.4.1} i \zref{1.4.2}?
+
+	Odgovor na ovo pitanje je potvrdan. Primjenjujuchi rekurzivnu relaciju \zref{1.4.2} na izraze s desne strane ponovo i ponovo, na koncu chemo dobiti samo pribrojnike oblika $L(i,0)$ ili $L(0,j)$. Evo prvih dvaju koraka. Prvi korak, rekurzivna relacija primjenjuje se na oba cclana s desne strane:
+	$$
+	\align
+		L(m,n)&=L(m-2,n)+L(m-1,n-1)+L(m-1,n-1)+L(m,n-2)\\
+		&=L(m-2,n)+2L(m-1,n-1)+L(m,n-2).
+	\endalign
+	$$
+	Drugi korak, rekurzivna relacija primjenjuje se na svaki cclan s desne strane:
+	$$
+	\align
+		L(m,n)&=L(m-3,n)+L(m-2,n-1)+2L(m-2,n-1)\\
+		&\qq\q+2L(m-1,n-2)
+		+L(m-1,n-2)+L(m,n-3)\\
+		&=L(m-3,n)+3L(m-2,n-1)+3L(m-1,n-2)+L(m,n-3).
+	\endalign
+	$$
+	U izrazu zdesna uviddamo stvaranje binomne sheme. To daje naslutiti da je funkcija $L(m,n)$ povezana s binomnim koeficijentima. Zaista, provjerit chemo na dva razliccita naccina da vrijedi
+	$$
+		L(m,n)=\bin{m+n}n.
+	$$
+
+	U tu svrhu, oznaccimo privremeno novu funkciju:
+	$$
+		Q(m,n):=\bin {m+n}n.
+	$$
+	Iz temeljne rekurzije za binomne koeficijente, koju mozzemo napisati na naccin:
+	$$
+		\bin{m+n}n=\bin{m+n-1}n+\bin{m+n-1}{n-1},
+	$$
+	vidimo da funkcija $Q$ zadovoljava relaciju:
+	$$
+		Q(m,n)=Q(m-1,n)+Q(m,n-1),
+	$$
+	a to je upravo rekurzivna relacija \zref{1.4.2}. Nadalje, za funkciju $Q$ vrijedi:
+	$$
+		Q(i,0)=\bin i0=1,\qq
+		Q(0,j)=\bin jj=1.
+	$$
+	S obzirom na to da je rekurzivnom relacijom i rubnim uvjetima funkcija $L$ jednoznaccno odreddena, zakljuccujemo da mora vrijediti $L(m,n)=Q(m,n)=\bin{m+n}n$.
+
+
+	Drugi je dokaz ove relacije direktan i mnogo jednostavniji.
+	Broj svih ssetnji $L(m,n)$ lako je odrediti na temelju
+	sljedecheg razmissljanja. Svaka je ssetnja jednoznaccno odreddena rasporedom
+	svojih koraka. Na primjer, jedna od ssetnji iz familije $L(5,2)$ izgleda ovako: $\8D\8G\8D\8D\8G\8D\8D$, jer u tijeku ssetnje moramo napraviti pet koraka udesno i dva prema gore. Sve ssetnje iz $L(m,n)$ sastoje se od $m$ koraka udesno i $n$ koraka prema gore. Dakle, tih ssetnji ima onoliko koliko i razliccitih naccina da se odabere $n$ koraka ``prema gore'' iz skupa od $m+n$ ukupnih koraka. To se mozze ucciniti na $\bin{m+n}n$ naccina. Time je tvrdnja dokazana.
+
+\Okvir[Proste ssetnje]
+	{Broj svih prostih ssetnji iz ishodissta do toccke $(m,n)$ jednak je
+	$$
+		L(m,n)=\bin{m+n}n.
+	$$
+	\skrati{16}
+	}
+
+\ppp{SSetnja ukoso}
+	Promotrimo sad drugi naccin pomicanja, kod kojih je dopussten pomak $D$ udesno, iz toccke $(i,j)$ u $(i+1,j)$, te pomak $K$ udesno gore, iz toccke $(i,j)$ u $(i+1,j+1)$.
+
+\Umetak[2]
+%\NemaSlike
+\Slika 03-03[5cm]SSetnja ukoso.[]
+\endUmetak
+
+
+	Ovakav naccin ssetnje omoguchuje jednostavnije povezivanje
+	broja putova s bi\-nom\-nim koeficijentom. Naime, da bismo iz,
+	toccke $(0,0)$ stigli u toccku $(m,n)$, nassa se ssetnja mora sastojati od $n$ koraka $\8K$ (jer se ordinata mozze povechati samo tim korakom), i preostalih $m-n$ koraka udesno $\8D$. Tako na primjer, jedan moguchi put koji nas vodi u toccku $(5,2)$
+	jest $\8D\8D\8K\8K\8D$.
+
+\Umetak[2]
+%\NemaSlike
+\Slika 03-04[4cm]SSetnja iz ishodissta do toccke $(5,2)$.[]
+\endUmetak
+
+
+
+	Broj svih moguchih putova occito je jednak $\bin 52$. Opchenitije, broj svih ovakvih putova iz ishodissta do toccke
+	$(m,n)$ oznaccit chemo s $K(m,n)$. Taj broj je jednak $\bin mn$.
+
+	Primjenom ove interpretacije binomnog koeficijenta mozzemo izvesti jednostavne dokaze nekih binomnih identiteta.
+
+
+
+\begin{primjer}
+	{\bf Rekurzivna formula}.
+	Temeljna rekurzivna formula za binomne koeficijente slijedi iz identiteta:
+	$$
+		K(m,n)=K(m-1,n-1)+K(m-1,n).
+	$$
+
+\Umetak[2]
+%\NemaSlike
+\Slika 03-05[3cm]Rekurzivna formula.[]
+\endUmetak
+
+
+	Prvi pribrojnik zdesna broji putove koji vode do toccke $(m,n)$
+	takve da je posljednji uccinjeni korak \8K, a drugi pribrojnik broji putove kod kojih je posljednji korak bio \8D.
+\end{primjer}
+
+\begin{primjer}
+	{\bf Vandermondeov identitet.} Dokazzimo da vrijedi:
+	$$
+		\bin{r+s}{n}=\suma k0n\bin rk\bin s{n-k}.
+	$$
+
+	U tu svrhu promotrit chemo sve moguche putove iz toccke $(0,0)$ do toccke $(r+s,n)$. Ukupan njihov broj je $K(r+s,n)=\bin{r+s}n$.
+	Rastavit chemo ih u disjunktne klase, s obzirom na polozzaj koji ccestica zauzima nakon naccinjenih toccno $r$ koraka. U tom trenu, apscisa toccke iznosi toccno $r$, jer se svakim korakom ta apscisa povechava za 1. Meddutim, ordinata mozze biti bilo koji broj izmeddu $0$ i $n$\footnote{1}{Ovdje ne ulazimo u analizu odnosa izmeddu brojeva $r$ i $n$, jer to nije
+	potrebno. Naime, ako je npr.\ $r<n$, tada ordinata toccke ne mozze biti vecha od $r$, no u Vandermondeovoj formuli takodder nismo postavljali takva ograniccenja. Ako je $r<n$, binomni
+	koeficijent $\bin rk$ bit che jednak nuli za svaki $k>r$. Jednako tako, broj putova koji prolaze tocckom $(r,k)$ bit che jednak nuli, ccim je $k>r$.}.
+
+\Umetak[2]
+%\NemaSlike
+\Slika 03-06[5cm]Vandermondeov identitet.[]
+\endUmetak
+
+
+	Neka je $k$ bilo koji broj, $0\le k\le n$. Broj putova koji krechu iz ishodissta i zavrssavaju u toccki $(r,k)$ jednak je $K(r,k)$. Na isti naccin, broj putova koji krechu iz te toccke, a zavrssavaju u $(r+s,n)$ jednak je $K(s,n-k)$. Zato je ukupan broj putova koji prolaze tocckom $(r,k)$ jednak $K(r,k)K(s,n-k)$. Za razliccite $k$ te su klase putova disjunktne, pa je ukupan broj putova jednak:
+	$$
+		K(r+s,n)=\suma k0n K(r,k)K(s,n-k).
+	$$
+	No, to je upravo Vandermondeova formula.
+\end{primjer}
+
+
+\begin{primjer}
+	Koristechi se modelom ssetnje, dokazzimo formulu \zref{dijagind}:
+	$$
+		\suma ikn\bin ik=\bin{n+1}{k+1}.
+	$$
+
+
+\Umetak[2]
+%\NemaSlike
+\Slika 03-07[5cm]Izvod rekurzivne formule.[]
+\endUmetak
+
+	Desna strana jednaka je broju svih putova $K(n+1,k+1)$.
+	Te chemo putove razvrstati u disjunktne klase tako da
+	fiksiramo trenutak $i$ u kojem se ccestica nalazi u toccki s ordinatom $k$, a neposredno nakon toga se penje na ordinatu $k+1$. To je dakle trenutak prije posljednjeg koraka $\8K$.
+
+
+
+	Apscisa $i$ mozze biti bilo koji broj $i\le k$, jer nakon toga u ssetnji moramo ucciniti pomak prema gore i odredden broj pomaka udesno da bismo stigli u toccku $(n+1,k+1)$. Prema tome, vrijedi relacija:
+	$$
+	K(n+1,k+1)=\suma i0n K(i,k),
+	$$
+	ssto je i trebalo dokazati.
+
+
+\end{primjer}
+
+\pp{Jednakost polinoma i kombinatorni identiteti}
+	Polinom stupnja $n$ po nepoznanici $x$ mozze se napisati u obliku:
+	$$
+		P(x)=a_nx^n+a_{n-1}x^{n-1}+\ld+a_1x+a_0.
+	$$
+	Ovaj se prikaz naziva \df{kanonski prikaz}.
+
+	U nastavku chemo promatrati razliccite izraze u kojima se pojavljuju polinomi i usporeddivat chemo njihove koeficijente. U tu svrhu, navest chemo najprije oznaku. Koeficijent polinoma $P$ koji se nalazi uz nepoznanicu $x^k$ oznaccavat chemo s $[x^k](P)$ ili, krache, s $[x^k]$. Dakle,
+	$$
+		[x^k](P)=a_k.
+	$$
+
+	Dva su polinoma $P$ i $Q$ jednaka ako im se u kanonskom prikazu podudaraju njihovi koeficijenti:
+	$$
+		[x^k](P)=[x^k](Q),\qq\forall k.
+	$$
+
+	Ilustrirajmo primjenu ovog svojstva na nekoliko primjera.
+
+\begin{primjer}
+	{\bf Temeljna rekurzivna relacija.} Dokazzimo formulu:
+	$$
+		\bin nk=\bin {n-1}k+\bin{n-1}{k-1}.
+	$$
+
+	Identitet chemo dokazati usporeddujuchi koeficijent uz potenciju $x^k$ s lijeve i desne strane ovog identiteta:
+	$$
+		(1+x)^n=(1+x)(1+x)^{n-1}.
+	$$
+	Prikazom preko binomne formule, dobivamo:
+	$$
+	\multline
+		1+\bin n1 x+\ld+\bin nk x^k+\ld+\bin nn x^n
+		\\
+		=
+		(1+x)\bl[1+\bin {n-1}1 x+\ld+\bin {n-1}k x^k+\ld
+		+\bin {n-1}{n-1} x^{n-1}\br].
+	\endmultline
+	$$
+	Pomnozzimo izraze zdesna i izdvojimo koeficijent uz $x^k$:
+	$$
+		\bin nk=\bin{n-1}k+\bin{n-1}{k-1}.
+	$$
+\end{primjer}
+
+
+\begin{primjer}
+	Iz identiteta
+	$$
+		(1+x)^n(1+x)^n=(1+x)^{2n}
+	$$
+	mozzemo napisati:
+	$$
+	\bl[\bin n0+\bin n1x+\ld+\bin nnx^n\br]
+	\bl[\bin n0+\bin n1x+\ld+\bin nnx^n\br]=\suma r0{2n}\bin{2n}rx^r.
+	$$
+	Polinomi slijeva i zdesna se podudaraju. Zato im se podudara koeficijent uz potenciju $x^n$:
+	$$
+		\bin n0\bin nn+\bin n1\bin n{n-1}+\ld+\bin nn\bin n0=\bin{2n}n.
+	$$
+	Iz svojstva simetrije binomnih koeficijenata, ova se jednakost mozze napisati na naccin:
+	$$
+		\bin n0^2+\bin n1^2+\ld+\bin nn^2=\bin{2n}n.
+	$$
+
+	Uvjeri se da se istovjetnim raccunom, iz jednakosti
+	$$
+		(1+x)^r(1+x)^s=(1+x)^{r+s},
+	$$
+	dobiva Vandermondeov identitet
+	$$
+		\suma k0n \bin rk\bin s{n-k}=\bin{r+s}n.
+	$$
+\end{primjer}
+
+\begin{primjer}
+	Rabechi jednakost:
+	$$
+		(1-x)^n(1+x)^n=(1-x^2)^n,
+	$$
+	izvedi identitet za binomne koeficijente:
+	$$
+	\suma k0n (-1)^k\bin nk^2=
+	\cases (-1)^{\rr n2}{\bin n{\rr n2}},&n\ \text{paran}\\0,&n\ \text{neparan}\endcases
+	$$
+
+	Postupamo sliccno kao u prethodnom primjeru. Lijeva strana jednakosti jednaka je:
+	$$
+	\bl[\bin n0-\bin n1x+\ld+(-1)^n\bin nnx^n\br]
+	\bl[\bin n0+\bin n1x+\ld+\bin nnx^n\br]
+	$$
+	pa je koeficijent uz $x^n$ u ovom izrazu jednak:
+	$$
+		\suma k0n (-1)^k\bin nk\bin n{n-k}=
+		\suma k0n (-1)^k\bin nk^2.
+	$$
+	Koeficijent uz $x^n$ u izrazu s desne strane jednak je nuli ako je $n$ neparan, jer se zdesna pojavljuju samo parne potencije. Ako je $x$ paran, ovaj je koeficijent jednak
+	$$
+		(-1)^{\rr n2}\bin n{\rr n2}
+	$$
+	i time je tvrdnja dokazana.
+\end{primjer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{primjer}
+	Dokazzimo identitet:
+	$$
+		\suma k1nk^2\bin nk=n(n+1)2^{n-2},\qq n\ge1.
+	$$
+\end{primjer}
+
+\poc
+	Krenimo od binomne formule:
+	$$
+		(1+x)^n=\suma k0n \bin nk x^k.
+	$$
+	Deriviranjem dobivamo:
+	$$
+		n(1+x)^{n-1}=\suma k1n k\bin nkx^{k-1}.
+	$$
+	Pomnozzimo obje strane nepoznanicom $x$ i zatim ponovno derivirajmo:
+	$$
+	\gather
+		nx(1+x)^{n-1}=\suma k1n k\bin nkx^{k},\\
+		n\Bl[(1+x)^{n-1}+(n-1)x(1+x)^{n-2}\Br]
+		=\suma k1n k^2\bin nkx^{k-1}.
+	\endgather
+	$$
+	Uvrstimo li ovdje $x=1$, dobit chemo trazzeni rezultat.
+\kraj
+
+\begin{primjer}
+	Dokazzimo identitet:
+	$$
+		\bin n1^2+2\bin n2^2+3\bin n3^2+\ld+n\bin nn^2
+		=\rr n2\bin{2n} n.
+	$$
+\end{primjer}
+
+\poc
+	Diferenciranjem binomne formule za izraz $(1+x)^n$, dobivamo:
+	$$
+		n(1+x)^{n-1}=\bin n1+2\bin n2x+\ld+n\bin nn x^{n-1}.
+	$$
+	Pomnozzimo obje strane sa $x$:
+	$$
+	nx(1+x)^{n-1}=\bin n1x+2\bin n2x^2+\ld+n\bin nn x^{n},\\
+	$$
+	Pomnozzimo obje strane s
+	$$
+	\align
+		(1+x)^n&=1+\bin n1x+\bin n2 x^2+\ld+\bin nn x^n\\
+		&=\bin nn+\bin n{n-1}x+\bin n{n-2} x^2+\ld+\bin n0 x^n.
+	\endalign
+	$$
+	Pogledajmo koeficijent uz $x^n$ s desne strane:
+	$$
+		\bin n1^2+2\bin n2^2+\ld+n\bin nn^2.
+	$$
+	Ta je suma jednaka koeficijentu uz $x^n$ na lijevoj strani, koja glasi:
+	$$
+		[x^n]\bl( nx(1+x)^{2n-1}\br)=
+		n\bin{2n-1}n=n\.\rr{(2n-1)!}{n!(n-1)!}=
+		n\.\rr12\.\rr{(2n)!}{(n!)^2}.
+	$$
+	Time je tvrdnja dokazana.
+\kraj
+
+
+\pp{Sume s binomnim koeficijentima}
+
+
+	Na nizu primjera upoznat chemo neke elementarne metode za raccunanje konaccnih suma u kojima se javljaju binomni koeficijenti.
+
+
+\begin{primjer}
+	$$
+	1\.\bin n1+2\.\bin n2+3\.\bin n3+\ld+n\.\bin nn.
+	$$
+\end{primjer}
+
+\poc
+	{\it Rjessenje 1.}
+	Neka je $S$ trazzena suma. Pribrojnik u ovoj sumi ima oblik $k\.\binom nk$ i zbog simetrije binomnog koeficijenta, mozze se napisati u obliku
+	$k\.\bin n{n-k}$. Zato je:
+	$$
+	\align
+		2S&=\suma k1n k\bin nk+\suma k1n k\bin n{n-k}\\
+		&=\suma k1n k\bin nk+\suma k0{n-1} (n-k)\bin n{k}\\
+		&=n\bin n0+\suma k1{n-1}\bl[k\bin nk+(n-k)\bin nk\br]+n\bin nn\\
+		&=n\bin n0+\suma k1{n-1}n\bin nk+n\bin nn\\
+		&=n\suma k0n\bin nk=n\.2^n.
+	\endalign
+	$$
+	Dobivamo rezultat:
+	$$
+		S=n\.2^{n-1}.
+	$$
+
+\medskip
+	{\it Rjessenje 2.}
+	Svaki se cclan sume mozze napisati u obliku:
+	$$
+	\align
+		k\.\bin nk&=k\.\rr{n(n-1)\cdots(n-k+1)}
+		{k!}\\&=n\.\rr{(n-1)\cdots(n-k+1)}{(k-1)!}
+		=n\.\bin{n-1}{k-1}.
+	\endalign
+	$$
+	Zato je:
+	$$
+		S=\suma k1n k\.\bin nk=\suma k1n n\.\bin{n-1}{k-1}
+		=n\suma k0{n-1}\bin{n-1}k=n\.2^{n-1}.
+	$$
+
+
+	{\it Rjessenje 3.}
+	Oznaccimo:
+	$$
+		F(z)=1+\bin n1 z+\bin n2 z^2+\ld+\bin nn z^n=(1+z)^n.
+	$$
+	Onda je
+	$$
+		F'(z)=\bin n1+2\.\bin n2z+\ld+n\.\bin nnz^{n-1}=n(1+z)^{n-1}.
+	$$
+	Stavljajuchi $z=1$, dobivamo:
+	$$
+		S=F'(1)=n\.2^{n-1}.
+	$$
+
+\medskip
+	{\it Rjessenje 4.}
+	Obje strane opisuju broj naccina na koji se mozze iz skupa od $n$ ljudi odabrati neko povjerenstvo koje ima predsjednika.
+
+	S desne strane opisan je izbor u kojemu najprije biramo predsjednika, ssto se mozze ucciniti na $n$ naccina. Zatim se izabere bilo koji podskup od preostalih $(n-1)$ cclanova, koji che cciniti ostatak povjerenstva. Broj moguchih odabira je $2^{n-1}$.
+
+	S lijeve strane opisan je odabir u kojem najprije biramo povjerenstvo koje se sastoji od $k$ cclanova, a zatim, meddu njegovim cclanovima, predsjednika tog povjerenstva. Ti su izbori razlicciti za razliccite $k$, pa ukupan njihov broj dobivamo zbrajanjem.
+\kraj
+
+
+\begin{primjer}
+	Izraccunajmo sumu:
+	$$
+		\suma k0n\suma jkn \bin nj\bin jk.
+	$$
+\end{primjer}
+
+\poc
+	Zadatak chemo rijessiti tako da {\it promijenimo poredak sumacije} u ovoj dvostrukoj sumi.
+
+	Granice vanjske sume su fiksne veliccine i prvi indeks sumacije mijenja se u granicama od 0 do $n$. Granice nutarnje sume mogu
+	biti promjenjive, ovise o vrijednosti prve varijable. To je ovdje sluccaj.  Podruccje sumacije dvostruke sume mozze se prikazati  sljedechim dijagramom:
+
+	$$
+	\def\arraycolstrech{2}
+	\begin{array}{l|cccccc}
+	\raise-5pt\hbox{$k$}\,j&0&1&2&3&\dots&n\stup0{7}\\
+	\hline
+	0&\bullet&\bullet&\bullet&\bullet&\bullet&\bullet\stup{12}6\\
+	1&&\bullet&\bullet&\bullet&\bullet&\bullet\stup{12}6\\
+	2&&&\bullet&\bullet&\bullet&\bullet\stup{12}6\\
+	3&&&&\bullet&\bullet&\bullet\stup{12}6\\
+	\vdots&&&&&\bullet&\bullet\stup{12}6\\
+	n&&&&&&\bullet\stup{12}6\\
+	\end{array}
+	$$
+
+	U zadanoj dvostrukoj sumi, poredak sumacije organiziran je tako da elementi nutarnje sume predstavljaju redak u ovoj tablici.
+	Prvi indeks $k$ fiksira redak, a drugi indeks odredduje podruccje sumacije: od dijagonalnog elementa do krajnje desnog elementa u tablici.
+
+	Zamjenom poretka sumacije mijenjamo ulogu stupaca i redaka. Prvi indeks sumacije odreddivat che stupac, a drugi podruccje sumacije unutar svakog stupca: od poccetka do dijagonalnog elementa. Tako dobivamo poccetnu sumu  u obliku:
+	$$
+		\suma j0n\suma k0j \bin nj\bin jk.
+	$$
+	Primijetite da je promijenjen samo poredak sumacije istovjetnih elemenata, zato je suma ostala ista. Ali, u ovom poretku cclan
+	$\binom nj$ ne ovisi o indeksu sumacije $k$ nutarnje sume, pa se mozze izlucciti ispred znaka sumacije:
+	$$
+		\suma j0n\bin nj\suma k0j\bin jk.
+	$$
+
+	Vrijednost nutarnje sume mozzemo napisati primjenjujuchi binomni teorem:
+	$$
+		(1+x)^j=\suma k0j\bin jk x^k
+	$$
+	pa je za $x=1$
+	$$
+		\suma k0j\bin jk=2^j.
+	$$
+	Poccetna suma sad iznosi
+	$$
+		\suma j0n\bin nj2^j
+	$$
+	i po binomnom teoremu, njezin je zbroj jednak $(1+2)^n=3^n$.
+\kraj
+
+
+\begin{primjer}
+	$$
+	\rr11\bin n0+\rr12\bin n1+\rr13\bin n2+\ld+\rr1{n+1}\bin nn.
+	$$
+\end{primjer}
+
+\poc
+	{\it Rjessenje 1.}
+	Oznaccimo trazzenu sumu sa S. Da bismo se rijessili faktora ispred binomnog koeficijenta, pomnozzit chemo svaki cclan s $(n+1)$. Kako je opchi cclan u ovoj sumi oblika $\dr1{n+1}\bin nk$, nakon mnozzenja on che se mochi zapisati u obliku:
+	$$
+		(n+1)\.\rr1{k+1}\bin nk
+		=\rr{n+1}{k+1}\.\rr{n(n-1)\cdots(n-k+1)}{k!}=
+		\bin{n+1}{k+1}.
+	$$
+	Sada imamo:
+	$$
+	\align
+	(n+1)S&=\rr{n+1}1\bin n0+\rr{n+1}2\bin n1+\ld+\bin{n+1}n\bin n{n-1}+\rr{n+1}{n+1}\bin nn\\
+	&=\bin{n+1}1+\bin {n+1}2+\ld+\bin{n+1}{n}+\bin{n+1}{n+1}\\
+	&=\bl[\bin{n+1}0+\bin{n+1}1+\ld+\bin{n+1}{n}+\bin{n+1}{n+1}\br]-\bin{n+1}0\\
+	&=2^{n+1}-1
+	\endalign
+	$$
+	Odavde sijedi:
+	$$
+		S=\rr{2^{n+1}-1}{n+1}.\kraj
+	$$
+
+\medskip
+	{\it Rjessenje 2.}
+	Oznaccimo:
+	$$
+		F(z)=\bin n0+\bin n1 z+\ld+\bin nn z^n=(1+z)^n.
+	$$
+	Onda je trazzena suma jednaka
+	$$
+	\align
+		\int_0^1S(z)\dif z
+		&=\bl[ \bin n0z+\bin n1 \rr{z^2}2+\ld+\bin nn\.\rr{z^{n+1}}{n+1}\br]\biggm|_0^1\\
+		&= \bin n0+\bin n1\.\rr12+\ld+\bin nn\.\rr1{n+1}\\
+		&=\int_0^1(1+z)^n\dif z=\rr{(1+z)^{n+1}}{n+1}\biggm|_0^1
+		=\rr{2^{n+1}-1}{n+1}.
+\kraj
+	\endalign
+	$$
+
+
+\begin{primjer}
+	Dokazzimo identitet
+	$$
+	\bin n1-\rr12\bin n2+\rr13\bin n3-\dots+(-1)^{n+1}\rr1n\bin nn
+	=1+\rr12+\ld+\rr 1n.
+	$$
+\end{primjer}
+
+
+\poc
+	Oznaccimo trazzenu suma sa $S$. Lijevu chemo stranu povezati s integralom razvijene binomne formule. Krenimo od
+	$$
+	\gather
+		(1-x)^n=\bin n0-\bin n1x+\bin n2x^2-\ld,\\
+		1-(1-x^n)=      \bin n1x-\bin n2x^2+\bin n3 x^3-\ld,\\
+		\rr{1-(1-x^n)}x=\bin n1 -\bin n2x  +\bin n3 x^2-\ld.
+	\endgather
+	$$
+	Integriranjem lijeve strane u granicama od 0 do 1 dobit chemo vrijednost sume $S$:
+	$$
+	\int_0^1\rr{1-(1-x^n)}x\dx
+	=\bin n1 -\bin n2  +\bin n3 -\ld=S.
+	$$
+
+	Da bismo dokazali trazzeni identitet, transformirat chemo podintegralnu funkciju. Stavimo $1-x=t$, $\dx=-\dif t$. Dobivamo:
+	$$
+	\align
+	\int_0^1\rr{1-(1-x^n)}x\dx&
+	=\int_1^0\rr{1-t^n}{1-t}(-\dif t)\\
+	&=\int_0^1\rr{1-t^n}{1-t}\dif t\\
+	&=\int_0^1(1+t+t^2+\ld+t^{n-1})\dif t\\
+	&=\bl(t+\rr12t^2+\rr13t^3\ld+\rr1nt^{n}\br)\biggm|_0^1\\
+	&=1+\rr12+\rr13+\ld+\rr 1n.
+	\endalign
+	$$
+	Time je tvrdnja dokazana.
+\kraj
+
+
+\pp{Matrica binomnih koeficijenata}
+
+
+	Napissimo matricu kojoj su elementi binomni koeficijenti $\binom nk$, $n,k\ge 0$:
+	$$
+	\bold P=\bmatrix
+	1&0&0&0&0&0&\dots\\
+	1&1&0&0&0&0&\dots\\
+	1&2&1&0&0&0&\dots\\
+	1&3&3&1&0&0&\dots\\
+	1&4&6&4&1&0&\dots\\
+	\vdots&
+	\endbmatrix
+	$$
+	Iako ova matrica ima beskonaccno mnogo redaka i stupaca, njezin je oblik jednostavan i zato se s njom mozze postupati gotovo kao s konaccnim matricama. Naime, ova je matrica donja trokutasta
+	jer su joj svi elementi iznad dijagonale jednaki nuli. Nadalje, njezini svi dijagonalni elementi jednaki su jedinici. To che imati za posljedicu da postoji inverz ove matrice. Mozzemo ga izraccunati na jednostavan naccin. U tu svrhu, dovoljno je poznatu binomnu formulu dovesti u vezu s matriccnim mnozzenjem:
+	$$
+	\bmatrix
+	1\\
+	1+x\\
+	(1+x)^2\\
+	(1+x)^3\\
+	(1+x)^4\\
+	\vdots
+	\endbmatrix
+	=\bmatrix
+	1&0&0&0&0&0&\dots\\
+	1&1&0&0&0&0&\dots\\
+	1&2&1&0&0&0&\dots\\
+	1&3&3&1&0&0&\dots\\
+	1&4&6&4&1&0&\dots\\
+	\vdots&
+	\endbmatrix
+	\bmatrix
+	1\\x\\x^2\\x^3\\x^4\\\vdots
+	\endbmatrix
+	$$
+
+	Da bismo odredili inverznu matricu, dovoljno je napisati obrnutu vezu, tako da vektor zdesna mozzemo dobiti pomochu onog s lijeve strane ove jednakosti. Drugim rijeccima, moramo iskazati potenciju $x^n$ preko $1$, $1+x$, $(1+x)^2$,\dots, $(1+x)^n$.
+	No, to je lako ucciniti:
+	$$
+		x^n=[(1+x)-1]^n=
+		\suma k0n (-1)^{n-k}\bin nk(1+x)^k
+	$$
+	To znacci da je element inverzne matrice jednak
+	$$
+		(\bold P^{-1})_{n,k}=(-1)^{n-k}\bin nk
+	$$
+	Vidimo da ona ima iste elemente kao i matrica $\bold P$, s promijenjenim predznacima na mjestima s neparnomm sumom indeksa:
+	$$
+	\bold P^{-1}
+		=\bmatrix
+	1&0&0&0&0&0&\dots\\
+	-1&1&0&0&0&0&\dots\\
+	1&-2&1&0&0&0&\dots\\
+	-1&3&-3&1&0&0&\dots\\
+	1&-4&6&-4&1&0&\dots\\
+	\vdots&
+	\endbmatrix
+	$$
+
+	Veza koju smo izveli ima neposrednu posljedicu.
+	Oznaccimo vektore $\bold a=(a_0,a_1,a_2,\dots)'$
+	i $\bold b=(b_0,b_1,b_2,\dots)'$. Onda vrijedi
+	$$
+		\bold b=\bold P\,\bold a.
+	$$
+	Zato je obratna veza definirana s
+	$$
+		\bold a=\bold P^{-1}\bold b,
+	$$
+	pa za koeficijente vektora $\bold a$ vrijedi relacija \zref{bsum2} iz ovog teorema:
+
+\Okvir[Invertiranje sume s binomnim koeficijentima]
+	{
+	\begin{tm}
+	\label{tminv}
+		Ako su $(a_n)$ i $(b_n)$ dva niza povezana relacijom
+		$$
+		\tagbr{bsum1}
+			b_n=\suma k0n \bin nk a_k
+			\tag
+		$$
+		onda vrijedi
+		$$
+		\tagbr{bsum2}
+			a_n=\suma k0n (-1)^{n-k}\bin nk b_k
+			\tag
+		$$
+	\end{tm}
+	\skrati{16}}
+
+
+
+
+
+	\ppp{Potencije matrice $\bold P$}
+
+	Ako je $[\bold x+1]=(1,1{+}x,(1{+}x)^2,\dots)'$ i
+	$\bold x=(1,x,x^2,\dots)'$, onda vrijedi
+	$$
+		[\bold x+1]=\bold P\,\bold x.
+	$$
+	Iz istog razloga vrijedi za bilo koji $k$:
+	$$
+		[\bold x+k+1]=\bold P\,[\bold x+k].
+	$$
+	Prema tome, iteriranjem  ove relacije zakljuccujemo da za svaki prirodni $r$ vrijedi
+	$$
+		[\bold x+r]=\bold P^r\,\bold x.
+	$$
+
+	Povezzimo sad vektore slijeva i zdesna, pa chemo na taj naccin odrediti elemente matrice $\bold P^r$.
+	Opchi element vektora slijeva je oblika
+	$$
+		(x+r)^n=\suma k0n r^{n-k}\bin nkx^k.
+	$$
+	Dakle, opchi element potencija matrice je
+	$$
+		(\bold P^r)_{n,k}=r^{n-k}\bin nk.
+	$$
+
+	Ako su $(a_n)$ i $(b_n)$ dva niza povezana relacijom
+	$$
+		b_n=\suma k0n r^{n-k}\bin nk a_k
+	$$
+	onda zapravo vrijedi
+	$$
+		\bold b=\bold P\,\bold a.
+	$$
+	Meddutim, po formuli inverzije mozzemo  napisati
+	$$
+		a_n=\suma k0n (-r)^{n-k}\bin nk b_k
+	$$
+	Prema tome, elementi inverzne matrice su
+	$$
+		(\bold P^{-r})_{n,k}=(-r)^{n-k}\bin nk.
+	$$
+
+\pp{Razmjesstanja}
+	Primijenit chemo ove rezultate u rjessavanju jednog kombinatornog problema.
+
+	Promotrimo sljedeche dvije permutacije, poccetnu
+	$$
+		1,2,3,4,5,6
+	$$
+	i neku drugu permutaciju ovih elemenata:
+	$$
+		3,2,6,4,1,5.
+	$$
+	Uoccavamo da su dva elementa ostala na svojim mjestima: 2 i 4, a polozzaj ostalih se promijenio. Kazzemo da ova permutacija ima dvije \df{fiksne toccke}.
+
+	\df{Razmjesstanjem} chemo nazvati onu permutaciju koja nema niti jednu fiksnu toccku.
+
+	Neka je $d_n$ broj razmjesstanja u skupu od $n$ elemenata. Onda je $d_1=0$
+	jer za $n=1$ imamo samo jednu permutaciju: 1.
+
+	Ako je $n=2$, permutacije su $1,2$ i $2,1$ pa je $d_2=1$.
+
+	Za $n=3$ imamo ssest permutacija:
+	$$
+		1,2,3\q
+		1,3,2\q
+		2,1,3\q
+		2,3,1\q
+		3,1,2\q
+		3,2,1.
+	$$
+	Lako je prebrojati $d_3=2$.
+
+	Da bismo odredili eksplicitnu formulu za broj $d_n$, uoccit chemo da svih permutacija skupa od $n$ elemenata ima $n!$. Te permutacije mozzemo rastaviti u disjunktne podskupove vech prema tome {\it koliko fiksnih toccaka one imaju}. Broj permutacija s toccno $k$ fiksnih toccaka iznosi $d_{n-k}$, jer kad fiksiramo $k$ brojeva u nekoj permutaciji, ostalih $(n-k)$ brojeva moramo razmjestiti tako da se broj fiksnih toccaka ne povechava, a to mozzemo ucciniti na $d_{n-k}$ naccina. S druge strane $k$ brojeva koji che biti fiksne toccke tih permutacija mozzemo odrediti na $\binom  nk$ naccina. Zato je broj permutacija s toccno $k$ fiksnih toccaka jednak
+	$$
+		\bin nkd_{n-k}
+	$$
+	Kako broj fiksnih toccaka mozze biti bilo koji, od $0$ do $n$, vrijedit che relacija:
+	$$
+		n!=\suma k0n \bin nk d_{n-k}
+	$$
+	Zbog simetrije binomnih koeficijenta ova se suma mozze napisati i ovako (stavimo $k=n-j$):
+	$$
+		n!=\suma j0n \bin n{n-j}d_j=\suma j0n \bin nj d_j.
+	$$
+	Prema Teoremu~\ref{tminv} mozzemo napisati obratnu vezu i time izraccunati broj razmjesstanja:
+
+\Okvir[Broj razmjesstanja]
+	{Broj razmjesstanja u skupu od $n$ elemenata iznosi
+	$$
+	\tagbr{razmj}
+		d_n=\suma k0n (-1)^{n-k}\bin nk k!.
+	\tag
+	$$
+	\skrati{12}
+	}
+
+	Na primjer, za $n=4$ formula daje
+	$$
+		d_4=1\.0!-4\.1!+6\.2!-4\.3!+4!=9.
+	$$
+	Ispissi tih devet permutacija!
+
+
+\pp{Stirlingova aproksimacija i procjena centralnih binomnih koeficijenata}
+
+	Za zadani broj $m$ najvecha vrijednost binomnog koeficijenta $\bin{m}n$ postizze se ako je $n=\lfloor m/2\rfloor$. Ako je $m$ neparan, ta se vrijednost postizze na dva mjesta, jer vrijedi
+	$$
+		\bin{2n-1}{n-1}=\frac{(2n-1)!}{(n-1)!n!}=\bin{2n-1}{n}.
+	$$
+	No, taj je koeficijent jednak
+	$$
+		\bin{2n-1}{n}=\frac{(2n-1)!(2n)}{(2n)(n-1)!n!}=\frac12\bin{2n}{n}.
+	$$
+	Stoga je za procjenu brzine rasta binomnih koeficijenata dovoljno procjeniti ponassanje {\it centralnog binomnoh koeficijenta} $\bin{2n}{n}$.
+
+	Procijeniti veliki broj $N$ znacci napisati ga u obliku:
+	$$
+		N=a\.10^k,
+	$$
+	pri ccemu je $1\le a<10$, a $k$ prirodan broj. Na temelju tog prikaza mozzemo stvoriti predodzzbu o veliccini tog broja.
+
+	U procjeni veliccine binomnih koeficijenata koristimo se  Stirlingovim aproksimacijama broja $n!$. Za velike vrijednosti od $n$ taj se broj mozze aproksimirati sljedechom formulom:
+        $$
+	\tagbr{str1}
+                n!\approx\sqrt{2\pi n}\biggl(\frac ne\biggr)^n.
+        \tag
+	$$
+
+	Ova je formula tek poccetak mnogo preciznijih aproksimacija
+	koje slijede  iz jednog od sljedechih dvaju prikaza,
+        Laplaceova prikaza:
+        $$
+        \tagbr{laplace}
+                n!\sim \sqrt{2\pi n}\biggl(\frac ne\biggr)^n
+                \biggl(
+                1+\frac1{12n}+\frac1{288n^2}
+                -\frac{139}{51840n^3}
+                -\frac{571}{2488320n^4}+\dots
+                \biggr)
+	\tag
+	$$
+        i Stirlingova reda:
+	$$
+                n!\sim \sqrt{2\pi n}\biggl(\frac ne\biggr)^n
+                \exp\biggl(
+                \frac1{12n}-\frac1{360n^3}+\frac1{1260n^5}+\dots
+                \biggr).
+        $$
+
+	Ako se ograniccimo samo na formulu \zref{str1} i primijenimo je u sljedechem prikazu centralnog binomnog koeficijenta:
+	$$
+		\bin {2n}n=\rr{(2n)!}{(n!)^2},
+	$$
+	dobit chemo sljedechu aproksimaciju:
+	$$
+	\tagbr{apr1}
+		\bin {2n}n\approx \rr{4^n}{\sq{\pi n}}.
+	\tag
+	$$
+	Za $n=10$ ona daje $\bin {20}{10}\approx 187079$, dok je toccna vrijednost $184756$.
+
+	Za poboljssanje ove aproksimacije dodat chemo joss pokoji cclan u Stirlingov red. Ako uvrstimo sljedechi cclan,
+	$$
+		n!\approx \sqrt{2\pi n}\biggl(\frac ne\biggr)^n
+                \.e^{\frac1{12n}}.
+	$$
+	dobivamo nakon sreddivanja:
+	$$
+	\tagbr{apr2}
+		\bin{2n}n\approx \rr{4^n}{\sq{\pi n}}\.e^{-\rr1{8n}}.
+	\tag
+	$$
+	Sada za $n=10$ dobivamo $\bin{2n}n\approx 184755$.
+
+	Za veche brojeve $n$ i ako trebamo vechu preciznost, koristit chemo sljedechu aproksimacijsku formulu:
+	$$
+	\bin{2n}{n}\approx\frac{4^n}{\sq{N\pi/2}}
+	\biggl[
+	2-\frac2{N^2}+\frac{21}{N^4}-\frac{671}{N^6}+\frac{45081}{N^8}+\dots
+	\biggr]
+	$$
+	gdje je $N=8n+2$.
+	Formule ovog tipa nazivaju se \di{asimptotski razvoji} i o njima che biti rijecci u Diskontu 2.
+
+	Za $n=1000$, vrijednost centralnog binomnog koeficijenta je
+	$$
+		\bin{2000}{1000}\approx 2.048\,151\,626\,989\,489\,714\,335\,162\cdot10^{600},
+	$$
+	a ova formula daje priblizznu vrijednost
+	$$
+		\bin{2000}{1000}\approx 2.048\,151\,626\,989\,489\,714\,311\,592\cdot10^{600}.
+	$$
+
+\break
+
+\PopisZadataka
+
+\Zad[1]
+	Dokazzi identitete
+\ujedan
+	\>A. $\dsize
+	\bin{2n}{2k}\bin{2n-2k}{n-k}\bin{2k}k=\bin{2n}n\bin nk^2$;<<<
+	\>B. $\dsize
+	\suma k0m (-1)^k\bin nk=(-1)^m\bin{n-1}m$.<<<
+\endZad
+
+\Zad[1]
+	Dokazzi da za $n>1$ vrijede identiteti
+\udva
+	\>A. $\dsize
+	\suma k1n
+	+(-1)^{k-1}k\bin nk=0$;<<<
+	\>B. $\dsize
+	\suma k0n\rr1{k+1}\bin nk(-1)^{k+1}=0$.<<<
+\endZad
+
+\Zad[2]
+	Dokazzi identitete
+\ujedan
+	\>A. $\dsize
+		\suma k0m\bin nk\bin{n-k}{m-k}=2^m\bin nm$;<<<
+	\>B. $\dsize
+		\sum_k\bin{2n}{2k-1}\bin{k-1}{m-1}=2^{2n-2m+1}\bin{2n-m}{m-1}$;<<<
+	\>C. $\dsize
+		\suma k0m\bin mk\bin{n+k}m=\suma k0m\bin nk\bin mk2^k$.<<<
+\endZad
+
+\Zad[1]
+	Dokazzi identitete
+\ujedan
+	\>A. $\dsize
+		\sum_k \bin r{m+k}\bin s{n-k}=\bin{r+s}{m+n}$;<<<
+	\>B. $\dsize
+		\sum_k \bin r{m+k}\bin s{n+k}=\bin{r+s}{r-m+n}$.<<<
+\endZad
+
+
+
+
+\Zad[2]
+	Dokazzi identitete
+\ujedan
+	\>A. $\dsize
+		\suma k0{\min(n,m)} \bin mk\bin nk=\bin{m+n}n$;<<<
+	\>B. $\dsize
+		\suma k0n\bin nk\bin{n-k}{r-k}\bin{n-r}{s-k}=\bin nr\bin ns$;<<<
+	\>C. $\dsize
+		\suma j0n\suma k0j \bin xk\bin y{j-k}\bin z{n-j}=\bin{x+y+z}n$.<<<
+\endZad
+
+%---------------------------------------------------------------
+\Zad [1]
+	Dokazzi da je
+\ujedan
+	\>A. $\dsize
+	(r+1)\bin n{r+1}+r\bin nr=n\bin nr$;<<<
+	\>B. $\dsize
+	\bin{r+2}2\bin n{r+2}+2\bin{r+1}2\bin n{r+1}
+	+\bin r2\bin nr=\bin n2\bin nr$;
+	<<<
+	\>C. $\dsize
+	\suma k0{\min(r,s)}
+	\bin sk\bin{r+s-k}{r-k}\bin{n}{r+s-k}=\bin ns\bin nr.
+	$
+	<<<
+\endZad
+%---------------------------------------------------------------
+
+
+\Zad[1]
+	Dokazzi identitete
+\ujedan
+	\>A. $\dsize
+	\bin n0+3\bin n1+5\bin n2+7\bin n3+\ld=2^n(n+1)$;<<<
+	\>B. $\dsize
+	\bin n0\bin n1+\bin n1\bin n2+\ld+\bin n{n-1}\bin nn=
+	\bin{2n}{n-1}$;<<<
+	\>C. $\dsize
+	\bin n0\bin nr+\bin n1\bin n{r+1}+\ld+\bin n{n-r}\bin nn=
+	\bin{2n}{n-r}$.<<<
+\endZad
+
+\penalty-9000
+
+%---------------------------------------------------------------
+\Zad[2]
+	Dokazzi identitete
+\udva
+	\>A. $\dsize
+	\sum_{\Sb k=0\\k\text{ paran}\endSb}\bin nk2^k=
+		\rr{3^n+(-1)^n}{2}$;<<<
+	\>B. $\dsize
+	\suma k0{2n}\bin{4n}{2k}(-1)^k=
+	(-1)^n2^{2n}$;<<<
+	\>C. $\dsize
+	\suma k1n\rr k{n^k}\bin {n+1}{k+1}=n$.<<<
+\endZad
+
+
+
+\Zad[1]
+	Koliko postoji funkcija $f:\{1,2,\ld,n\}\to\{1,2,\ld,n\}$ koje su \di{monotone}, tj, za koje iz $i<j$ slijedi $f(i)\le f(j)$?
+\endZad
+
+\Zad[1]
+	Derivacija umnosska dviju funkcija raccuna se formulom $(uv)'=u'v+uv'$. Uz pretpostavku da sve derivacije postoje, dokazzi sljedechu \df{Leibnizovu formulu} za $n$-tu derivaciju umnosska:
+	$$
+		(uv)^{(n)}=\suma k0n\bin nku^{(k)}v^{(n-k)}.
+	$$
+\endZad
+
+
+\Zad[1]
+	Dokazzi da za svaki $n$ vrijedi ocjena $\binom{2n}n<4^n$.
+\endZad
+
+%---------------------------------------------------------------
+\Zad[2]
+	Koliki je najvechi koeficijent u prikazu potencije $(x_1+x_2+\ld+x_n)^n$?
+\endZad
+
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\Zad[2]
+	Neka je $n=rk$, pri ccemu je $k>1$ cijeli broj.
+	Koliki je najvechi koeficijent u prikazu potencije $(x_1+x_2+\ld+x_r)^n$?
+\endZad
+
+%---------------------------------------------------------------
+
+\Zad[2]
+	Neka su $k$ i $m$ nenegativni cijeli brojevi i $n=2^m-1$. Dokazzi da su svi koeficijenti $\binom nk$ neparni.
+\endZad
+
+%---------------------------------------------------------------
+
+\Zad[1]
+	Neka su $k$ i $m$ pozitivni cijeli brojevi i $n=2^m$. Dokazzi da su svi koeficijenti $\binom nk$ parni.
+\endZad
+
+%---------------------------------------------------------------
+\Zad[1]
+	Niz $(a_k)$ je \df{log-konkavan} ako vrijedi $a_{k-1}a_{k+1}\le a_k^2$.
+	Dokazzi da je niz $a_k=\binom nk$ log-konkavan.
+\endZad
+
+%---------------------------------------------------------------
+
+\Zad %[12]
+	Dokazzi da je beskonaccni niz $\binom kk$, $\binom {k+1}k$, $\binom {k+2}k$,\dots\ log-konkavan.
+\endZad
+
+
+%---------------------------------------------------------------
+\Zad[2]
+	Niz $(a_k)$ je unimodalan ako vrijedi $a_1\le a_2\le\dots\le a_k$
+	and $a_k\ge a_{k+1}\ge\ld\ge a_n$, ili sa suprotnim poretkom znakova nejednakosti. Dokazzi da je log-konkavan niz unimodalan.
+\endZad
+
+
+
+%---------------------------------------------------------------
+\Zad[2]
+	Neka je $p>2$ prost broj. Za koje vrijednosti broja $n$ che svaki binomni koeficijent $\binom nk$ biti djeljiv s $p$?
+\endZad
+
+
+%---------------------------------------------------------------
+\Zad [2]
+	{\bf A.} Dokazzi da je broj putova po ressetki iz $(0,0)$ do $(n,n)$ koji nikad ne prelazi dijagonalu jednak
+	$$\dsize\dr1{n+1}\bin{2n}n.$$
+
+	\noindent
+	{\bf B.}
+	Dokazzi da je broj putova po ressetki iz $(0,0)$ do $(m,n)$ koji nikad ne prelazi dijagonalu jednak
+	$$
+		\bin{m+n}n-\bin{m+n}{n-1}.
+	$$
+
+\endZad
+
+%---------------------------------------------------------------
+\Zad [1]
+	Koliko postoji putova iz $(0,0)$ u $(8,8)$ koji ne prolaze tocckom $(5,5)$, ali prolaze tocckom $(2,2)$?
+\endZad
+
+\penalty-9000
+
+%---------------------------------------------------------------
+\Zad [2]
+	(a) Dokazzi da se $m$ jedinica i $k$ nula mogu poredati u niz tako da u zapisu ne postoje dvije uzastopne nule, na $\bin {m+1}k$ naccina.
+
+\noindent
+	(b) Pokazzi da ako se $n$ znakova nula ili jedan mozze napisati u nizu tako da dvije nule ne budu zapisane zaredom na $f(n)$ naccina, onda je
+	$f(0)=1$, $f(1)=2$,
+	$$
+		f(n)=f(n-1)+f(n-2),\qq n\ge 2.
+	$$
+
+\noindent
+	(c) Dokazzi da je
+	$$
+		f(n)=\sum_{k=0}^{\lfloor(n+1)/2\rfloor}\bin{n-k+1}k.
+	$$
+\endZad
+%---------------------------------------------------------------
+
+
+\Zad[1]
+	Krenuvssi od elementa na poziciji $(n,0)$ zbrojimo sve elemente koji se nalaze u rastuchoj dijagonali. Dokazzi da je rezultat jednak Fibonac|cijevom broju:
+	$$
+		F_{n+1}=\suma k0n \bin{n-k}k.
+	$$
+\endZad
+
+
+\penalty-9000
+%---------------------------------------------------------------
+\Zad[2]
+	Izraccunaj sume
+\udva
+	\>A. $\dsize \suma k1n\rr k{n^k}\bin nk$;<<<
+	\>B. $\dsize \suma k0n\rr1{k+1}\bin nk t^{k+1}$.<<<
+\endZad
+
+\Zad[2]
+	Izraccunaj sljedeche sume
+\ujedan
+	\>A. $1\.\bin n1-2\.\bin n2+3\.\bin n3+\ld +(-1)^{n+1}\.n\.\bin nn$.<<<
+	\>B. $1\.\bin n0+2\.\bin n1+3\.\bin n2+\ld+(n+1)\bin nn$.<<<
+	\>C. $1\.\bin n2-2\bin n3+3\bin n4+\ld+(-1)^n(n-1)\bin nn$.<<<
+	\>D. $2\.\bin n2+6\bin n3+12\bin n4+\ld+n(n-1)\bin nn$.<<<
+	\>E. $1^2\bin n1+2^2\bin n2+3^2\bin n3+\ld+n^2\bin nn$.<<<
+	\>F. $\dsize\rr12\bin n1-\rr13\binom n3+\rr14\binom n3+\ld+\rr{(-1)^{n+1}}{n+1}\bin nn$.<<<
+	\>G. $\dsize\rr12\binom n0+\rr13\binom n1+\rr14\binom n2+\ld+\rr1{n+2}\binom nn$.<<<
+	\>H. $\dsize\rr{2^2}2\bin n1+\rr{2^3}3\bin n2+\rr{2^4}4\bin n3+\ld+\rr{2^{n+1}}{n+1}\bin nn$.<<<
+	\>I. $\dsize\rr1{1!(2n-1)!}+\rr1{3!(n-3)!}+\rr1{5!(n-5)!}+\ld+\rr1{(2n-1)!1!}$.<<<
+\endZad
+
+
+\penalty -9000
+
+\Zad[2]
+	Dokazzi identitete
+\ujedan
+	\>A. $\dsize
+	\suma k1n(-1)^{k+1}\rr{1}{k(k+1)}\bin{n}k=\rr12+\rr13+\ld+\rr1{n+1}$;<<<
+	\>B. $\dsize
+	\suma k0n
+	(-1)^{k+1}\rr1{(k+1)^2}\bin{n}k
+	=\rr1{n+1}\bl[1+\rr12+\rr13+\ld+\rr1{n+1}\br]$;<<<
+	\>C.
+	$\dsize
+	\suma k0n\bl[\rr{n-2k}n\bin nk\br]^2=\rr2n\bin{2n-2}{n-1}$.<<<
+\endZad
+
+
+%---------------------------------------------------------------
+\Zad[2]
+	Neka je $n=3k$. Dokazzi da vrijedi
+	$$
+		\lim_{n\to\ty}\rr1{2^n}\suma i0k\bin n{3i}=\rr13.
+	$$
+\endZad
+
+
+
+\Zad[2]
+	Neka je
+	$$
+	a_n=\rr1{\binom n0}+\rr1{\binom n1}+\ld+\rr1{\binom nn}.
+	$$
+	Dokazzi da vrijedi $a_n=\rr{n+1}{2n}a_{n-1}+1$. na temelju toga dokazzi da postoji $\limn a_n$ i izraccunaj taj limes.
+\endZad
+
+
+\Zad[1]
+	Koristechi formulu \pref{razmj} dokazzi da za razmjesstanja vrijedi rekurzivna relacija
+	$$
+		d_r=rd_{r-1}+(-1)^r.
+	$$
+\endZad
+
+\Zad[1]
+	Dokazzi da vrijedi
+	$$
+		d_r=(r-1)d_{r-1}+(r-1)d_{r-2}.
+	$$
+\endZad
+
+\Zad[1]
+	Zbroj centralnih binomnih koeficijenata
+	mozze se priblizznom raccunati pomochu formule:
+	$$
+	\sum_{k=0}^n\binom{2k}k\approx\frac{4^{n+1}}{3\sqrt{\pi n}}
+		\biggl(1+\frac1{24n}+\frac{59}{384n^2}+\frac{2425}{9216n^3}
+		+\frac{576793}{884736n^4}\biggr)
+	$$
+	Koristechi CAS, izraccunaj toccnost ove formule za $n=1000$.
+\endZad
+
+\Zad[4]
+	Za binomni koeficijent razliccit od centralnog vrijedi sljedecha aproksimacija
+	$$
+		\bin{2n}{n-r}\approx\biggl[1-\frac{2r^2}{2n+r^2+1}\biggr]\bin{2n}{n}.
+	$$
+	Pokazzi da je izraz zdesna donja ograda za ovaj binomni koeficijent.
+\endZad
+
+%---------------------------------------------------------------
+%\Zad %[12]
+%\endZad
+%---------------------------------------------------------------
+
+\endPopisZadataka
