@@ -39,9 +39,5 @@ NEKO_SMECE => XXX
 math {
     (D)\|([Dd])  =>  $1$2
     (C)\|([Cc])  =>  wtds
-}
-
-math {
-    gdfjgdfg => fgsdfgd
-    ss => SHSHSHSHHSHSHSH
+    PERO         =>  MARKO
 }

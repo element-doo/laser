@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" media="all" href="/bljuv.css"/>
+</head>
+<body>
+
+<div>
+    <div>
+        <textarea class="rule-editor "  rows="10" placeholder="GIEV UR TEX NAO"></textarea>
+        <button class="validate-rules btn btn-primary" type="button">Validate rules</button>
+        <button class="transform btn btn-large btn-primary" type="button">Transform</button>
+    </div>
+    <div class="editors">
+            <textarea class="editor editor-left"  rows="50" placeholder="GIEV UR TEX NAO"></textarea>
+            <textarea class="editor editor-right" rows="50" placeholder="IMMA REPLACE ALL UR TEXXXS"/></textarea>
+    </div>
+</div>
+
+
+<script>
+
+           $('.validate-rules').click(function(event) {
+               var context = $(this);
+               var text = $(".rule-editor").val();
+               $.post('/rules/validate', text, function (data) {
+                   alert(data)
+               }).fail(function (result) {
+                   alert(result.responseText);
+               });
+
+           });
+
+           $('.transform').click(function(event) {
+               var context = $(this);
+               var rules = $(".rule-editor").val();
+               var text = $(".editor-left").val();
+               var data = {
+                   rules: rules,
+                   text: text
+               };
+               $.post('/rules/transform', data, function (res) {
+                   $(".editor-left").val(res)
+               }).fail(function (result) {
+                   alert(result.responseText);
+               });
+
+           });
+</script>
+</body>
+</html>
