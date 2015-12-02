@@ -41,10 +41,14 @@
                    rules: rules,
                    text: text
                };
-               $.post('/rules/transform', data, function (res) {
-                   $(".editor-left").val(res)
-               }).fail(function (result) {
-                   alert(result.responseText);
+               $.ajax({
+                   type: 'POST',
+                   url: '/rules/transform',
+                   data: JSON.stringify(data), // or JSON.stringify ({name: 'jonas'}),
+                   contentType: "application/json",
+                   dataType: 'json'
+               }).complete(function(res) {
+                   $(".editor-right").val(res.responseText)
                });
 
            });

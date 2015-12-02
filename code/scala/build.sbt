@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   , "com.typesafe.akka" %% "akka-slf4j" % "2.3.6"
   , "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.3"
   , "org.parboiled" %% "parboiled" % "2.1.0"
+  , "com.fasterxml.jackson.module"  %% "jackson-module-scala" % "2.6.3"
 )
 
 Revolver.settings

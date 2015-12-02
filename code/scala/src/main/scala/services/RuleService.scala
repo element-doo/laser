@@ -12,7 +12,7 @@ case class Rule(from: Regex, to: String)
 class RuleService {
   def validateRules(text: String) = {
     println(s"validating:\n $text")
-    val parseTree = RuleParser.parse(text).get
+    val parseTree = RuleParser.parse(text.replaceAll("(?m)^[ \t]*\r?\n", "")).get
     val parsedRules = parseTree.nodes.map({
       case Block(head,trans) => trans.size
       case Transformer(from,to) => from.toString+" -> "+to.toString
@@ -38,16 +38,14 @@ class RuleService {
 
     //TODO auto mapping
     val rootRules = rulesPerTag.rules
-    val mathRules = rulesPerTag.children.head.rules
+    val mathRules = rulesPerTag.children.headOption.map(_.rules).getOrElse(Seq.empty)
 
-    t.text.foreach(node => {
-      node match {
-        case FreeTextNode(value) => println(transformText(value,rootRules))
-        case MathNode(value) => println(transformText(value,mathRules))
-      }
-    })
-
-
+    t.text.foldLeft(""){ (acc,curr) => {
+      acc + (curr match {
+        case FreeTextNode(value) => transformText(value,rootRules)
+        case MathNode(value) => transformText(value,mathRules)
+      })
+    }}
   }
 
 

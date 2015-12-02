@@ -2,7 +2,10 @@ package api
 import services.RuleService
 import spray.routing._
 
+case class TextSubmit(rules: String, text: String)
+
 class WebService  extends HttpServiceActor {
+
 
   def receive = runRoute(detach(){
     assetRoutes ~
@@ -35,11 +38,9 @@ class WebService  extends HttpServiceActor {
       } ~
       path("transform") {
           post {
-            formFields("rules", "text") { (rules, text ) =>
-              complete {
-                 "dasdas"
-              }
-            }
+            entity(as[TextSubmit]) { ts => {
+              complete(new RuleService().transform(ts.text,ts.rules).toString)
+            }}
           }
       }
     }
