@@ -57,6 +57,6 @@ object RuleParser {
     }
   }
 
-  def parse(doc: String): Try[Document] = new RuleParser(doc).documentRule.run()
+  def parse(doc: String): Try[Document] = new RuleParser(doc.replaceAll("(?m)^[ \t]*\r?\n", "")).documentRule.run()
 
 }

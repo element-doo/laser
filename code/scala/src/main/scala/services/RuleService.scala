@@ -11,8 +11,7 @@ case class Rule(from: Regex, to: String)
 
 class RuleService {
   def validateRules(text: String) = {
-    println(s"validating:\n $text")
-    val parseTree = RuleParser.parse(text.replaceAll("(?m)^[ \t]*\r?\n", "")).get
+    val parseTree = RuleParser.parse(text).get
     val parsedRules = parseTree.nodes.map({
       case Block(head,trans) => trans.size
       case Transformer(from,to) => from.toString+" -> "+to.toString

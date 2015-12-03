@@ -1,6 +1,8 @@
 .editor {
     min-width: 49%;
+    font-size: 12px;
 }
 .rule-editor {
     min-width: 20%;
+    font-size: 15px;
 }
