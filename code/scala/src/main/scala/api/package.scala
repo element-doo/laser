@@ -37,5 +37,5 @@ package object api {
     }
   }
 
-  implicit val textSubmitMarshaller = makeUnmarshaller[TextSubmit]
+  //implicit val textSubmitMarshaller = makeUnmarshaller[TextSubmit]
 }

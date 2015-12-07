@@ -1,3 +1,4 @@
+/*
 package services
 
 import parsers.TParser.{MathNode, FreeTextNode}
@@ -81,3 +82,4 @@ class RuleService {
     }
   }
 }
+*/

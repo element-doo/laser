@@ -1,4 +1,4 @@
-package api
+/*package api
 import services.RuleService
 import spray.routing._
 
@@ -45,3 +45,4 @@ class WebService  extends HttpServiceActor {
       }
     }
 }
+*/
