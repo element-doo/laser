@@ -17,14 +17,15 @@ object TParser {
   case class BlockArg(value: Seq[Node]) extends Node
   case class FuncArg(value: Seq[Node]) extends Node
 
-  case class RawNode(value: String) extends Node
+  case class TextNode(value: String) extends Node
 
+  //TODO must signal whether the entire input has been consumed, shoud fail if doesnt parse EOI
 
   class SimpleTexParser(val input: ParserInput) extends Parser {
     //def mathNodeRule = rule { "$$" ~ capture(zeroOrMore(!"$$" ~ ANY)) ~ "$$" ~> MathNode }
 
     def nodeRule: Rule1[Seq[Node]] = rule {
-      oneOrMore(functionRule | blockArgument | argumentRule | rawNodeRule ) ~ EOI
+      oneOrMore(functionRule | blockArgument | argumentRule | rawNodeRule )
     }
 
 
@@ -46,7 +47,7 @@ object TParser {
     }
 
     def rawNodeRule = rule {
-      capture(oneOrMore(!"\\" ~ !"]" ~ !"[" ~ !"}" ~ !"{" ~ ANY)) ~> RawNode
+      capture(oneOrMore(!"\\" ~ !"]" ~ !"[" ~ !"}" ~ !"{" ~ ANY)) ~> TextNode
     }
 
     def nts = rule {
@@ -70,7 +71,7 @@ object TParser {
 }
 
 
-/*
+/* CLEAR
 slikalijevo <2mm>ben-dahir[3cmx7cm]     //   \\slika(\w+)?\s?(<\w*>)?\s?([\w\-]+)?\[     to     \\slika$1$2$3\[
 slika magicni-01rj[3cmx3cm][]
 slikalijevo<3mm>bolsic[3cmx4cm][]
@@ -81,5 +82,10 @@ slika<9mm> figurice[3cmx6.5cm][]
 vbox to 0pt
 vbox to0pt
 hbox to 6cm
+ */
 
+/* BLOCKS
+\TAG[][]{<- XXX ->}               nested
+\begin{TAG}{}   -> \end{TAG}      same level
+\TAG            -> \endTAG        same level
  */
