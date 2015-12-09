@@ -1,4 +1,4 @@
-/*package api
+package api
 import services.RuleService
 import spray.routing._
 
@@ -36,13 +36,19 @@ class WebService  extends HttpServiceActor {
           }
         }
       } ~
-      path("transform") {
+      path("REMOVEtransform") {
           post {
             entity(as[TextSubmit]) { ts => {
-              complete(new RuleService().transform(ts.text,ts.rules).toString)
+              complete(new RuleService().transformTerminals(ts.text,ts.rules).toString)
             }}
           }
+      } ~
+      path("transform") {
+        post {
+          entity(as[TextSubmit]) { ts => {
+            complete(new RuleService().transformTree(ts.text).toString)
+          }}
+        }
       }
     }
 }
-*/

@@ -8,11 +8,6 @@ import scala.util.Try
 
 object TParser {
   trait Node
-  /*
-  case class FreeTextNode(value: String) extends Node
-  case class MathNode(value: String) extends Node
-  case class Document(text: Seq[Node])
-*/
   case class Func(name: String, bArgs: Seq[BlockArg], funcArg: Seq[FuncArg]) extends Node
   case class BlockArg(value: Seq[Node]) extends Node
   case class FuncArg(value: Seq[Node]) extends Node
@@ -65,7 +60,7 @@ object TParser {
   def parse(doc: String): Try[Seq[Node]]= {
     val cleaned = doc.replaceAll("""\\([Ss])lika(\w+)?\s?(<\w*>)?\s?([\w\-]+)?\[""","\\\\$1lika$2$3$4[")
                      .replaceAll("""\\([hv])box\s?to\s?(\w+)?\s?\{""","\\\\$1boxto$2{")
-                     .replaceAll("""\%.*(\n|%)""","") //strip comments
+                     .replaceAll("""(?<!\\)%.*(\n|%)""","") //strip comments
     new SimpleTexParser(cleaned).nodeRule.run()
   }
 }
