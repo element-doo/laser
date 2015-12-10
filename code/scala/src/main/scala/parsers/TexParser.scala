@@ -2,15 +2,20 @@ package parsers
 
 import org.parboiled2._
 import org.parboiled2.CharPredicate._
+import parsers.TParser.Node
 
 import scala.util.Try
 
 object TParser {
   trait Node
+
+  case class Document(nodes: Seq[Node]) extends Node
+
   case class Func(name: String, bArgs: Seq[BlockArg], funcArg: Seq[FuncArg]) extends Node
+  case class BlockFunc(tag: String, openNode: Node, closeNode: Node, nested: Seq[Node]) extends Node
+
   case class BlockArg(value: Seq[Node], tail: String) extends Node  //tail used for formatting preservation
   case class FuncArg(value: Seq[Node], tail: String) extends Node
-
 
   case class TextNode(value: String) extends Node
   case class MathNode(value: String) extends Node
@@ -55,16 +60,16 @@ object TParser {
 
     def newLine = rule { "\r\n" | "\r" | "\n" }
 
-    def testno = rule {
-      oneOrMore(nodeRule)
+    def documentRule = rule {
+      nodeRule ~> Document
     }
   }
 
-  def parse(doc: String): Try[Seq[Node]]= {
+  def parse(doc: String): Try[Document]= {
     val cleaned = doc.replaceAll("""\\([Ss])lika(\w+)?\s?(<\w*>)?\s?([\w\-]+)?\[""","\\\\$1lika$2$3$4[")
                      .replaceAll("""\\([hv])box\s?to\s?(\w+)?\s?\{""","\\\\$1boxto$2{")
                      .replaceAll("""(?<!\\)%.*(\n|%)""","") //strip comments
-    new SimpleTexParser(cleaned).nodeRule.run()
+    new SimpleTexParser(cleaned).documentRule.run()
   }
 }
 

@@ -1,20 +1,21 @@
 package transform
 
 import parsers.TParser
+import parsers.TParser.BlockFunc
 
 object Structural {
   import TParser.{Node => RawNode, Func => RawFunc, TextNode => RawText, FuncArg => RawFArg, BlockArg => RawBArg, MathNode => RawMath }
 
-  case class BlockFunc(openNode: RawNode, closeNode: RawNode, nested: Seq[RawNode]) extends RawNode
+
 
   def transform(originalText: String): String = {
     val pTree = TParser.parse(originalText).get
     //println(join(process(pTree)))
-    print(process(pTree))
+    print(process(pTree.nodes))
   }
 
   def parse(originalText: String): Seq[RawNode] = {
-    process(TParser.parse(originalText).get)
+    process(TParser.parse(originalText).get.nodes)
   }
 
 
@@ -57,10 +58,11 @@ object Structural {
         //some,none  - beginTAG/endTAG
         //none,none  - selfcontained
         val processedNode = lookAheadIndex.map(index => {
-          val contextNodes = tail.take(index+1)
+          val contextNodes = tail.take(index)
           val closingNode = tail(index)
           val processedNestedNodes = process(contextNodes)
-          BlockFunc(head,closingNode,processedNestedNodes)
+          val tag = head.asInstanceOf[RawFunc].name
+          BlockFunc(tag,head,closingNode,processedNestedNodes)
         }).getOrElse({
           processSingle(head)
         })
@@ -88,7 +90,7 @@ object Structural {
   private def print(nodes: Seq[RawNode]): String = {
     def prt(node: RawNode): String = {
       node match {
-        case BlockFunc(open,close,children) => {
+        case BlockFunc(tag, open,close,children) => {
           prt(open) + print(children) + prt(close)
         }
         case RawFunc(name, bArgs, fArgs) => {
