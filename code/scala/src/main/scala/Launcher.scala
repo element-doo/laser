@@ -39,8 +39,26 @@ object StaticLauncher {
      val originalText = Try {
       Resource.fromClasspath("simple.txt").string   //"element/text/origtxt/em1-01.txt"
     } getOrElse(sys.error("Could not open file!"))
-    val a = Rewriters.ifalica(Structural.parse(originalText))
+    val a = Structural.transform(originalText)
     println(a)
+  }
+}
+
+
+object BlehLauncher {
+
+  def main (args: Array[String]){
+    val input =
+      """Evo svih prostih brojeva koji su manji od 100:
+        |       $$
+        |       %\gather
+        |       2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
+        |       43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, \rlap{97}
+        |       %\endgather
+        |       $$
+        |       Nastavi ovaj niz ispisujuchi sve proste brojeve manje od 200.
+        |       SSto misliss,""".stripMargin
+    println(TParser.parse(input))
   }
 }
 

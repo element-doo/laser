@@ -2,48 +2,71 @@ package transform.rewriters
 
 import parsers.TParser._
 
-trait NodeRewriter[R>:Node,T>:Node]{
+
+/*trait NodeRewriter[R>:Node,T>:Node]{
 
 
   def rewrite(node: R): Option[T]
-}
+}*/
+
 
 
 
 
 object Rewriters {
+  trait Rewriter
+
   type MatchingGroup = Seq[Node]
-  type Matcher = Seq[Node] => MatchResult
-  trait MatchResult
-  case class MatchingFailed extends MatchResult
-  case class MatchingSuccess(consumed: Int, groups: Seq[MatchingGroup]) extends MatchResult
+  type Matcher = Seq[Node] => Option[Match]
+  case class Match(consumed: Int, groups: Seq[MatchingGroup])
 
 
+  val transformations: Map[Matcher,Seq[Rewriter]]= Map.empty //introduce some pritorities  (ifBlock -> Seq(ifRewriter))
+/*
+  def rewrite(input: Seq[Node]) = {
+    for {
+      matcher   <- transformations.keys
+      matchRes  <- matcher(input)
+      rewriter  <-
+    }
+  }
+*/
 
-  /*def tryMatch(input: Seq[Node], matcher: Matcher): MatchResult = {
 
-  }*/
+  //MATCHERI
 
 
   //NO NESTED IFS!!!!!
-  def ifBlock(input: Seq[Node]): MatchResult = {
+  def ifBlock(input: Seq[Node]): Option[Match] = {
     input match {
       case Func(name,_,_)::tail if name.startsWith("if")=> {
         val elseIndex = tail.indexWhere(node => node.isInstanceOf[Func] && node.asInstanceOf[Func].name.equals("else"))
         val fiIndex = tail.drop(elseIndex+1).indexWhere(node => node.isInstanceOf[Func] && node.asInstanceOf[Func].name.equals("fi"))
         //TODO bleh, chain options, FOR comprehens...
         if(elseIndex >= 0 && fiIndex >= 0) {
-          MatchingSuccess(fiIndex+2,Seq(tail.take(elseIndex),tail.slice(elseIndex+1,elseIndex+fiIndex+1)))
+          Some(Match(fiIndex+2,Seq(tail.take(elseIndex),tail.slice(elseIndex+1,elseIndex+fiIndex+1))))
         } else {
-         MatchingFailed()
+         None
         }
       }
-      case _ => MatchingFailed()
+      case _ => None
     }
   }
-  
+
+
+
+
+  //REWRITERI
+  //
+  def remove(input: Seq[Node], matching: Match): Seq[Node] = Seq.empty
+  def elseRemoval(input: Seq[Node], matching: Match): Seq[Node] = {
+    matching.groups.head //take only elements nested under if clause
+  }
+
+
 }
 
+//func(blockArg bez fArga) stringNode blockArg    <----------komentar slike
 
 //rewriter
 //structural patterns

@@ -1,6 +1,5 @@
 package parsers
 
-import org.parboiled2.RuleTrace.OneOrMore
 import org.parboiled2._
 import org.parboiled2.CharPredicate._
 
@@ -9,10 +8,12 @@ import scala.util.Try
 object TParser {
   trait Node
   case class Func(name: String, bArgs: Seq[BlockArg], funcArg: Seq[FuncArg]) extends Node
-  case class BlockArg(value: Seq[Node]) extends Node
-  case class FuncArg(value: Seq[Node]) extends Node
+  case class BlockArg(value: Seq[Node], tail: String) extends Node  //tail used for formatting preservation
+  case class FuncArg(value: Seq[Node], tail: String) extends Node
+
 
   case class TextNode(value: String) extends Node
+  case class MathNode(value: String) extends Node
 
   //TODO must signal whether the entire input has been consumed, shoud fail if doesnt parse EOI
 
@@ -20,13 +21,11 @@ object TParser {
     //def mathNodeRule = rule { "$$" ~ capture(zeroOrMore(!"$$" ~ ANY)) ~ "$$" ~> MathNode }
 
     def nodeRule: Rule1[Seq[Node]] = rule {
-      oneOrMore(functionRule | blockArgument | argumentRule | rawNodeRule )
+      oneOrMore(functionRule | blockArgument | argumentRule | mathNodeRule | rawNodeRule )
     }
 
-
-    //ne consumati trailing NTS!!!!! potreban za rebuild
     def functionRule = rule {
-      "\\" ~ capture(optional(functionNameRule)) ~ zeroOrMore(argumentRule) ~ optional(nts) ~ zeroOrMore(blockArgument) ~ optional(nts) ~> ((name:String,arg:Seq[BlockArg],fa:Seq[FuncArg])=> Func(name,arg,fa))
+      "\\" ~ capture(optional(functionNameRule)) ~ zeroOrMore(argumentRule) ~ zeroOrMore(blockArgument) ~> ((name:String,arg:Seq[BlockArg],fa:Seq[FuncArg])=> Func(name,arg,fa))
     }
 
     def functionNameRule = rule {
@@ -34,15 +33,19 @@ object TParser {
     }
 
     def argumentRule = rule {
-      "[" ~ optional(nodeRule) ~ "]" ~> ((value:Option[Seq[Node]]) => BlockArg(value.getOrElse(Seq.empty)))
+      "[" ~ optional(nodeRule) ~ "]" ~ capture(nts) ~> ((value:Option[Seq[Node]],tail:String) => BlockArg(value.getOrElse(Seq.empty), tail))
     }
 
     def blockArgument = rule {
-      "{" ~ optional(nodeRule) ~ "}" ~>  ((value:Option[Seq[Node]]) => FuncArg(value.getOrElse(Seq.empty)))
+      "{" ~ optional(nodeRule) ~ "}" ~ capture(nts) ~>  ((value:Option[Seq[Node]], tail:String) => FuncArg(value.getOrElse(Seq.empty), tail))
     }
 
     def rawNodeRule = rule {
-      capture(oneOrMore(!"\\" ~ !"]" ~ !"[" ~ !"}" ~ !"{" ~ ANY)) ~> TextNode
+      capture(oneOrMore(!"\\" ~ !"]" ~ !"[" ~ !"}" ~ !"{" ~ !"$$" ~ ANY)) ~> TextNode
+    }
+
+    def mathNodeRule = rule {
+      "$$" ~ capture(oneOrMore(!"$$" ~ ANY)) ~ "$$" ~> MathNode
     }
 
     def nts = rule {

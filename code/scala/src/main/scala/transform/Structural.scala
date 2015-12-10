@@ -3,7 +3,7 @@ package transform
 import parsers.TParser
 
 object Structural {
-  import TParser.{Node => RawNode, Func => RawFunc, TextNode => RawText, FuncArg => RawFArg, BlockArg => RawBArg }
+  import TParser.{Node => RawNode, Func => RawFunc, TextNode => RawText, FuncArg => RawFArg, BlockArg => RawBArg, MathNode => RawMath }
 
   case class BlockFunc(openNode: RawNode, closeNode: RawNode, nested: Seq[RawNode]) extends RawNode
 
@@ -72,12 +72,13 @@ object Structural {
 
   private def processSingle(node: RawNode): RawNode = {
     node match {
-      case RawBArg(nested)            => RawBArg(process(nested))
-      case RawFArg(nested)            => RawFArg(process(nested))
-      case text:RawText               => text
+      case RawBArg(nested,tail)            => RawBArg(process(nested),tail)
+      case RawFArg(nested,tail)            => RawFArg(process(nested),tail)
+      case text:RawText                    => text
+      case math:RawMath                    => math
       case RawFunc(name,bArgs,fArgs)  => {
-        val pBargs = bArgs.map(barg => RawBArg(process(barg.value)))
-        val pFargs = fArgs.map(farg => RawFArg(process(farg.value)))
+        val pBargs = bArgs.map(barg => RawBArg(process(barg.value),barg.tail))
+        val pFargs = fArgs.map(farg => RawFArg(process(farg.value),farg.tail))
         RawFunc(name,pBargs,pFargs)
       }
     }
@@ -88,17 +89,18 @@ object Structural {
     def prt(node: RawNode): String = {
       node match {
         case BlockFunc(open,close,children) => {
-          prt(open) + print(children) + prt(close) + "\n"
+          prt(open) + print(children) + prt(close)
         }
         case RawFunc(name, bArgs, fArgs) => {
-          "\\" + name + print(bArgs) + print(fArgs) + "\n"
+          "\\" + name + print(bArgs) + print(fArgs)
         }
-        case RawBArg(children) => {
-          "[" + print(children) + "]"
+        case RawBArg(children, tail) => {
+          "[" + print(children) + "]" +  tail
         }
-        case RawFArg(children) => {
-          "{" + print(children) + "}"
+        case RawFArg(children, tail) => {
+          "{" + print(children) + "}" + tail
         }
+        case RawMath(value) => "$$" + value + "$$"
         case RawText(value) => value
       }
     }
