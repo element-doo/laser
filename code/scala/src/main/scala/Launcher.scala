@@ -7,7 +7,6 @@ import parsers.TParser
 import parsers.TParser.{Document, Node, TextNode}
 import spray.can.Http
 import transform.Structural
-import transform.rewriters.{Descender}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import api._
@@ -40,9 +39,9 @@ object StaticLauncher {
       Resource.fromClasspath("simple.txt").string   //"element/text/origtxt/em1-01.txt"
     } getOrElse(sys.error("Could not open file!"))
 
-    val a = Structural.parse(originalText)
-    val b = Descender.descend(Document(a),Seq("root"))
-    println(a)
+    //val a = Structural.transform(originalText)
+    //val b = Descender.descend(Document(a),Seq("root"))
+    //println(a)
   }
 }
 

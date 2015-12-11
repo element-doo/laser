@@ -8,9 +8,8 @@ object RuleParser {
   trait Node
   trait Line extends Node
   case class Document(nodes: Seq[Node])
-  case class Block(head: BlockHead,transformers: Seq[Node]) extends Node
+  case class Block(head: BlockHead,transformers: Seq[Transformer]) extends Node
   case class BlockHead(classes: Seq[Class])
-  case class Comment(value: String) extends Line
   case class Transformer(from: FromTransformer, to: ToTransformer) extends Line
   case class FromTransformer(value: String)
   case class ToTransformer(value: String)
@@ -26,7 +25,7 @@ object RuleParser {
     def classNameRule = rule { capture(oneOrMore(CharPredicate.Alpha)) ~> Class}
 
     def lineRule = rule {
-      stripSpace ~ (commentRule | transformerRule) ~ (newLine | EOI)
+      stripSpace ~ transformerRule ~ (newLine | EOI)
     }
 
     def fromTransRule = rule {
@@ -35,10 +34,6 @@ object RuleParser {
 
     def toTransRule = rule {
       capture(oneOrMore(latinExtended)) ~ stripSpace  ~> ToTransformer
-    }
-
-    def commentRule = rule {
-      "#" ~ capture(zeroOrMore(CharPredicate.Printable)) ~> Comment
     }
 
     def newLine = rule { "\r\n" | "\r" | "\n" }
@@ -57,6 +52,6 @@ object RuleParser {
     }
   }
 
-  def parse(doc: String): Try[Document] = new RuleParser(doc.replaceAll("(?m)^[ \t]*\r?\n", "")).documentRule.run()
+  def parse(doc: String): Try[Document] = new RuleParser(doc.replaceAll("(?m)^[ \t]*\r?\n", "").replaceAll("#.*\\n","")).documentRule.run()
 
 }

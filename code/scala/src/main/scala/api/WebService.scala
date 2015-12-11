@@ -36,19 +36,19 @@ class WebService  extends HttpServiceActor {
           }
         }
       } ~
-      path("REMOVEtransform") {
+      path("transform") {
           post {
             entity(as[TextSubmit]) { ts => {
-              complete(new RuleService().transformTerminals(ts.text,ts.rules).toString)
+              complete(new RuleService().transformTree(ts.text,ts.rules).toString)
             }}
           }
-      } ~
+      } /*~
       path("transform") {
         post {
           entity(as[TextSubmit]) { ts => {
             complete(new RuleService().transformTree(ts.text).toString)
           }}
         }
-      }
+      }*/
     }
 }

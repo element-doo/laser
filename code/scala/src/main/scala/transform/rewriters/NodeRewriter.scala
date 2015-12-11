@@ -1,6 +1,8 @@
 package transform.rewriters
 
+import parsers.RuleParser.{ToTransformer, FromTransformer, Transformer}
 import parsers.TParser._
+import services.Rule
 import transform.rewriters.NodeRewriter.{Rewriter, Match}
 
 
@@ -10,7 +12,10 @@ import transform.rewriters.NodeRewriter.{Rewriter, Match}
   def rewrite(node: R): Option[T]
 }*/
 object Descender {
+  def apply(rules: Map[String,Seq[Rule]]) = new Descender(rules)
+}
 
+class Descender(textRules: Map[String,Seq[Rule]]) {
 
   //TODO extract common descender
   def descend(node: Node, ctx: Seq[String]): Node = {
@@ -27,9 +32,9 @@ object Descender {
       }
       case BlockFunc(tag, open,close,vals) => BlockFunc(
         tag
-      , descend(open,ctx:+tag)
-      , descend(close,ctx:+tag)
-      , transformList(vals, ctx:+tag)
+        , descend(open,ctx:+tag)
+        , descend(close,ctx:+tag)
+        , transformList(vals, ctx:+tag)
       )
       case Document(nodes)            => Document(transformList(nodes,ctx))
     }
@@ -45,24 +50,33 @@ object Descender {
 
   def rewriteText(value: String,ctx: Seq[String]): String = {
     //rewrite rules, math or plaintext, depending on the class path
-    value
+    val oRules = textRules.get(ctx.mkString("-"))
+    oRules.map(rules => {
+      rules.foldLeft(value)((acc:String,rule: Rule) => rule.from.replaceAllIn(acc,rule.to))
+    }).getOrElse(value)
   }
 
   def rewrite(nodes: Seq[Node]): Seq[Node]= {
-    //bleh redo this
-    NodeRewriter.transformations.map({
-      case (matcher, rewriters) => (rewriters.head,matcher(nodes)) //multi :/
-    }).find(
-      {case (rewriter: Rewriter,matching: Option[Match]) => matching.isDefined}
-    ).map({
+    //find matcher that matches, transform, rerun again (on the same input or down the tail)
+    //if no match, continue down the tail
+    val matchingPerMatcher = NodeRewriter.transformations.keys.map(matcher => {
+      (NodeRewriter.transformations(matcher).head, matcher(nodes)) //multi :/
+    })
+    val successefulMatcher = matchingPerMatcher.find({
+      case (rewriter: Rewriter,matching: Option[Match]) => matching.isDefined   //first that matched
+    })
+    successefulMatcher.map({
       case (rewriter, matching) => {
         val rewritenNodes = rewriter(nodes.take(matching.get.consumed),matching.get)
-        rewritenNodes++nodes.drop(matching.get.consumed)
+        rewrite(rewritenNodes++nodes.drop(matching.get.consumed))                     //TODO!!! retries other matchers on rewritten rule
       }
-    }).getOrElse(if(!nodes.isEmpty)rewrite(nodes.tail)else nodes) //recurse down the nodes list, after match and rewrite, rewrite the reminder
+    }).getOrElse({
+      if(nodes.isEmpty)
+        Seq.empty
+      else
+        nodes.head+:rewrite(nodes.tail)
+    }) //recurse down the nodes list, after match and rewrite, rewrite the reminder
   }
-
-
 }
 
 
@@ -77,12 +91,14 @@ object NodeRewriter {
 
   val transformations: Map[Matcher,Seq[Rewriter]] = Map(
     (Matchers.ifBlock,              Seq(Rewriters.elseRemoval)),
-    (Matchers.function("df"),       Seq(Rewriters.boldBlock)),
-    (Matchers.function("it"),       Seq(Rewriters.italicBlock)),
-    (Matchers.function("df"),       Seq(Rewriters.remove)),
-    (Matchers.function("bigskip"),  Seq(Rewriters.remove)),
-    (Matchers.function("smallskip"),Seq(Rewriters.remove)),
-    (Matchers.function("medskip"),  Seq(Rewriters.remove))
+    (Matchers.function("df",1),       Seq(Rewriters.boldBlock)),
+    (Matchers.function("it",1),       Seq(Rewriters.italicBlock)),
+    (Matchers.function("df",1),       Seq(Rewriters.remove)),
+    (Matchers.function("smallskip",0),Seq(Rewriters.remove)),
+    (Matchers.function("bigskip",0),  Seq(Rewriters.remove)),
+    (Matchers.innerFunction("it"),    Seq(Rewriters.italicInnerBlock)),
+    (Matchers.innerFunction("it"),    Seq(Rewriters.italicInnerBlock)),
+    (Matchers.funcItalicBlock,  Seq(Rewriters.funcItalicBlock))
   )
 
   //MATCHERI
@@ -105,9 +121,11 @@ object NodeRewriter {
         case _ => None
       }
     }
-    def function(name:String): Matcher =
+    def function(name:String, fArgsLen: Int): Matcher =
       (input: Seq[Node]) =>  input match {
-        case Func(fName,_,Seq(farg))+:tail if fName == name => Some(Match(1,Seq.empty))
+        case Func(fName,_,fArgs)+:tail if fName == name && fArgs.size == fArgsLen => {
+          Some(Match(1,Seq.empty))
+        }
         case _ => None
       }
     def slikaComment(input: Seq[Node]): Option[Match] = {
@@ -115,11 +133,39 @@ object NodeRewriter {
       //func with no fArgs, 1 barg  ~ X randomNodes ~ 1empty bArg   , transform into 2bArg func
       None
     }
+    def innerFunction(name:String): Matcher =
+      (input: Seq[Node]) =>  input match {
+        case FuncArg(values,trailing)+:tail if values.nonEmpty => {
+          values.head match {
+            case Func(fName,Seq(),Seq()) if fName==name => Some(Match(1,Seq(values.tail)))  //stripaj zadnji dio italic string \/
+            case _ => None
+          }
+        }
+        case _ => None
+      }
+    def funcItalicBlock(input: Seq[Node]): Option[Match] = {
+      input match {
+        case Func(name,_,fArgs)::tail if fArgs.nonEmpty => {
+          fArgs.last match {
+            case FuncArg(values,tail) if values.nonEmpty => {
+              values.headOption.map({
+                case Func(name,_,_) if name=="it" => Some(Match(1,Seq.empty))
+                case _ => None
+              }).get
+            }
+            case _ => None
+          }
+        }
+        case _ => None
+      }
+    }
   }
 
 
   object Rewriters { //input is the only matched part of global input
-    val remove = (in: Input,m: Match) => Seq.empty
+    val remove = (in: Input,m: Match) => {
+      Seq.empty
+    }
     val elseRemoval = (in: Input,m: Match) => {
       m.groups.head
     }   //take only elements nested under if clause
@@ -129,7 +175,15 @@ object NodeRewriter {
     val italicBlock = (in: Input,m: Match) => {//type guaranteed by matcher
       TextNode("<it>")+:in.head.asInstanceOf[Func].funcArg.head.value:+TextNode("</it>")
     }
+    val italicInnerBlock = (in: Input,m: Match) => {
+      TextNode("<it>")+:in.head.asInstanceOf[FuncArg].value.tail:+TextNode("</it>")
+    }
     val commentedSlika = (in: Input,m: Match) => in
+    val funcItalicBlock = (in: Input, m: Match) => {
+      val fIn = in.head.asInstanceOf[Func]
+      val lastFArg = fIn.funcArg.last
+      Seq(Func(fIn.name,fIn.bArgs,fIn.funcArg.seq.dropRight(1)),FuncArg(lastFArg.value,lastFArg.tail))
+    }
   }
 
 

@@ -1,17 +1,21 @@
 package transform
 
+import parsers.RuleParser.Transformer
 import parsers.TParser
-import parsers.TParser.BlockFunc
+import parsers.TParser.{Document, BlockFunc}
+import services.Rule
+import transform.rewriters.{Descender, NodeRewriter}
 
 object Structural {
   import TParser.{Node => RawNode, Func => RawFunc, TextNode => RawText, FuncArg => RawFArg, BlockArg => RawBArg, MathNode => RawMath }
 
 
 
-  def transform(originalText: String): String = {
+  def transform(originalText: String, rules: Map[String,Seq[Rule]]): String = {
     val pTree = TParser.parse(originalText).get
-    //println(join(process(pTree)))
-    print(process(pTree.nodes))
+    val processed = process(pTree.nodes)
+    val document = Document(processed)
+    print(Descender(rules).descend(document,Seq("root")).asInstanceOf[Document].nodes)
   }
 
   def parse(originalText: String): Seq[RawNode] = {

@@ -1,7 +1,7 @@
 package services
 
 import parsers.RuleParser
-import parsers.RuleParser.{Comment, Transformer, Block}
+import parsers.RuleParser.{Document, Transformer, Block}
 import transform.Structural
 
 import scala.util.matching.Regex
@@ -11,18 +11,22 @@ case class Rule(from: Regex, to: String)
 
 class RuleService {
   def validateRules(text: String) = {
-    val parseTree = RuleParser.parse(text).get
-    val parsedRules = parseTree.nodes.map({
-      case Block(head,trans) => trans.size
-      case Transformer(from,to) => from.toString+" -> "+to.toString
-      case Comment(cmnt) => 0
-    }).mkString("\n")
-    println(parsedRules)
-    parsedRules
+    val ruleMap = parseRules(text)
+    ruleMap.mkString("\n")
   }
 
-  def transformTree(originalText: String) = {
-    Structural.transform(originalText)
+  def transformTree(text: String, rules: String) = {
+    Structural.transform(text,parseRules(rules))
   }
-  def transformTerminals(text: String, rules: String) = ???
+
+  private def parseRules(input: String): Map[String,Seq[Rule]] = {
+    val parseTree = RuleParser.parse(input).get.nodes
+    val rulesPerPath = parseTree.map({
+      case Block(head,trans) => ("root-"+head.classes.map(_.value).mkString("-"),trans.map(t=> Rule(t.from.value.r,t.to.value)))
+      case a: Transformer => ("root", Seq(Rule(a.from.value.r,a.to.value)))
+    }).groupBy(_._1).map { case (key,value) => (key,value.map(_._2).flatten)}
+    rulesPerPath
+  }
+
+  private def buildRuleTree(rules: Seq[RuleNode]) = ???
 }
