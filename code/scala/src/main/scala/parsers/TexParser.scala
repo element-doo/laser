@@ -18,7 +18,9 @@ object TParser {
   case class FuncArg(value: Seq[Node], tail: String) extends Node
 
   case class TextNode(value: String) extends Node
-  case class MathNode(value: String) extends Node
+  trait MathNode extends Node
+  case class InlineMath(value: String) extends MathNode
+  case class BlockMath(value: String) extends MathNode
 
   //TODO must signal whether the entire input has been consumed, shoud fail if doesnt parse EOI
 
@@ -46,11 +48,19 @@ object TParser {
     }
 
     def rawNodeRule = rule {
-      capture(oneOrMore(!"\\" ~ !"]" ~ !"[" ~ !"}" ~ !"{" ~ !"$$" ~ ANY)) ~> TextNode
+      capture(oneOrMore(!"\\" ~ !"]" ~ !"[" ~ !"}" ~ !"{" ~ !"$$" ~ !"$" ~ ANY)) ~> TextNode
     }
 
     def mathNodeRule = rule {
-      "$$" ~ capture(oneOrMore(!"$$" ~ ANY)) ~ "$$" ~> MathNode
+      blockMathRule | inlineMathRule
+    }
+
+    def blockMathRule = rule {
+      "$$" ~ capture(oneOrMore(!"$$" ~ ANY)) ~ "$$" ~> BlockMath
+    }
+
+    def inlineMathRule = rule {
+      "$" ~ capture(oneOrMore(!"$" ~ ANY)) ~ "$" ~> InlineMath
     }
 
     def nts = rule {

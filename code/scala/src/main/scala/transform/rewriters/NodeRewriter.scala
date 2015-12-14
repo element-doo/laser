@@ -20,7 +20,8 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
   //TODO extract common descender
   def descend(node: Node, ctx: Seq[String]): Node = {
     node match {
-      case MathNode(value)            => MathNode(rewriteText(value,ctx))
+      case InlineMath(value)            => InlineMath(value) //TODO don't rewrite math tags
+      case BlockMath(value)            => BlockMath(value)
       case TextNode(value)            => TextNode(rewriteText(value,ctx))
       case BlockArg(vals,tail)        => BlockArg(transformList(vals,ctx),tail)
       case FuncArg(vals,tail)         => FuncArg(transformList(vals,ctx),tail)

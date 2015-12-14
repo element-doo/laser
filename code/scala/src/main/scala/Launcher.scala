@@ -5,6 +5,7 @@ import akka.io.IO
 import akka.pattern.ask
 import parsers.TParser
 import parsers.TParser.{Document, Node, TextNode}
+import services.RuleService
 import spray.can.Http
 import transform.Structural
 import scala.concurrent.ExecutionContext
@@ -36,12 +37,12 @@ object StaticLauncher {
 
   def main (args: Array[String]){
      val originalText = Try {
-      Resource.fromClasspath("simple.txt").string   //"element/text/origtxt/em1-01.txt"
+      Resource.fromClasspath("full.txt").string   //"element/text/origtxt/em1-01.txt"
     } getOrElse(sys.error("Could not open file!"))
 
     //val a = Structural.transform(originalText)
     //val b = Descender.descend(Document(a),Seq("root"))
-    //println(a)
+    println(new RuleService().transformTree(originalText,"").toString)
   }
 }
 

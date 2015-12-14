@@ -2,7 +2,7 @@ package transform
 
 import parsers.RuleParser.Transformer
 import parsers.TParser
-import parsers.TParser.{Document, BlockFunc}
+import parsers.TParser.{InlineMath, BlockMath, Document, BlockFunc}
 import services.Rule
 import transform.rewriters.{Descender, NodeRewriter}
 
@@ -26,7 +26,7 @@ object Structural {
   private def closingTagLookup(closingTag: String, searchSpace: Seq[RawNode], farg: Option[String]): Option[Int] = {
     searchSpace.indexWhere(node => {
       node match {
-        case RawFunc(name,_,Seq()) => (name == closingTag) && farg.isEmpty
+        case RawFunc(name,_,Seq()) => (name == closingTag || name==closingTag+"*") && farg.isEmpty
         case RawFunc(name, _, Seq(fArg:RawFArg)) => {
           (name == closingTag) && farg.isDefined && (fArg.value.head.asInstanceOf[RawText].value == farg.get) //osigurati da je stvarno rawText
         }
@@ -65,7 +65,12 @@ object Structural {
           val contextNodes = tail.take(index)
           val closingNode = tail(index)
           val processedNestedNodes = process(contextNodes)
-          val tag = head.asInstanceOf[RawFunc].funcArg.head.value.head.asInstanceOf[RawText].value
+          //val tag = head.asInstanceOf[RawFunc].funcArg.head.value.head.asInstanceOf[RawText].value
+          val enclosingFunc = head.asInstanceOf[RawFunc]
+          val tag = enclosingFunc.funcArg.headOption
+            .map(fArg=> fArg.value.headOption
+              .map(textNode=> textNode.asInstanceOf[RawText].value)).flatten
+            .getOrElse(enclosingFunc.name)
           BlockFunc(tag,head,closingNode,processedNestedNodes)
         }).getOrElse({
           processSingle(head)
@@ -106,7 +111,8 @@ object Structural {
         case RawFArg(children, tail) => {
           "{" + print(children) + "}" + tail
         }
-        case RawMath(value) => "$$" + value + "$$"
+        case BlockMath(value) => "$$" + value + "$$"
+        case InlineMath(value) => "$" + value + "$"
         case RawText(value) => value
       }
     }
