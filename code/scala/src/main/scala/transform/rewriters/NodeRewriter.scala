@@ -127,10 +127,12 @@ object NodeRewriter {
       input match {
         case Func(name,_,_)::tail if name.startsWith("if")=> {
           val elseIndex = tail.indexWhere(node => node.isInstanceOf[Func] && node.asInstanceOf[Func].name.equals("else"))
-          val fiIndex = tail.drop(elseIndex+1).indexWhere(node => node.isInstanceOf[Func] && node.asInstanceOf[Func].name.equals("fi"))
+          val fiIndex = tail.indexWhere(node => node.isInstanceOf[Func] && node.asInstanceOf[Func].name.equals("fi"))
           //TODO bleh, chain options, FOR comprehens...
           if(elseIndex >= 0 && fiIndex >= 0) {
-            Some(Match(elseIndex+fiIndex+3,Seq(tail.take(elseIndex),tail.slice(elseIndex+1,elseIndex+fiIndex+1))))
+            Some(Match(fiIndex+2,Seq(tail.take(elseIndex),tail.slice(elseIndex+1,fiIndex))))
+          } else if (fiIndex > elseIndex) { //only  if\fi blick
+            Some(Match(fiIndex+2,Seq(tail.slice(0,fiIndex))))
           } else {
             None
           }
