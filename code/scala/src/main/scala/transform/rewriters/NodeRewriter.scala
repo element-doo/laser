@@ -97,8 +97,8 @@ object NodeRewriter {
     (Matchers.function("df",1),       Seq(Rewriters.remove)),
     (Matchers.function("smallskip",0),Seq(Rewriters.remove)),
     (Matchers.function("bigskip",0),  Seq(Rewriters.remove)),
-    (Matchers.innerFunction("it"),    Seq(Rewriters.italicInnerBlock)),
-    (Matchers.innerFunction("it"),    Seq(Rewriters.italicInnerBlock)),
+    (Matchers.innerFunctionPrefix("it"),    Seq(Rewriters.innerBlock("it"))),
+
     (Matchers.funcItalicBlock,  Seq(Rewriters.funcItalicBlock)),
 
     (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock)),
@@ -115,7 +115,37 @@ object NodeRewriter {
     (Matchers.function("upet",0),Seq(Rewriters.remove)),
     (Matchers.function("tudva",0),Seq(Rewriters.remove)),
     (Matchers.function("tutri",0),Seq(Rewriters.remove)),
-    (Matchers.function(">",0),Seq(Rewriters.remove))
+    (Matchers.function(">",0),Seq(Rewriters.remove)),
+
+
+    (Matchers.funcFunc("global","lhead"),Seq(Rewriters.remove)),
+    (Matchers.funcFunc("global","rhead"),Seq(Rewriters.remove)),
+
+    (Matchers.function("mark",1),Seq(Rewriters.remove)),
+
+    (Matchers.function("BezBroja",0),Seq(Rewriters.remove)),
+    (Matchers.function("Headlines",0),Seq(Rewriters.remove)),
+    (Matchers.function("BROJnaslov=",0),Seq(Rewriters.remove)),
+    (Matchers.function("Primjertrue",0),Seq(Rewriters.remove)),
+    (Matchers.function("Primjerfalse",0),Seq(Rewriters.remove)),
+    (Matchers.function("OkvirPrimjer",0),Seq(Rewriters.remove)),
+    (Matchers.function("vss",0),Seq(Rewriters.remove)),
+
+    (Matchers.functionPrefix("vbox"),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix("vglue"),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix("vskip"),Seq(Rewriters.remove)),
+
+    (Matchers.functionPrefix("vbox"),Seq(Rewriters.flattenFunc)),
+
+    (Matchers.blockFunction("tekst"),Seq(Rewriters.flattenBlock)),
+    (Matchers.blockFunction("umetak"),Seq(Rewriters.flattenBlock)),
+    (Matchers.blockFunction("Umetak"),Seq(Rewriters.flattenBlock)),
+
+    (Matchers.innerFunctionPrefix("rightskip"),Seq(Rewriters.flattenInner))
+
+
+
+
   )
 
   //MATCHERI
@@ -140,6 +170,14 @@ object NodeRewriter {
         case _ => None
       }
     }
+    def functionPrefix(name:String): Matcher =
+      (input: Seq[Node]) =>  input match {
+        case Func(fName,_,fArgs)+:tail if fName.startsWith(name) => {
+          Some(Match(1,Seq.empty))
+        }
+        case _ => None
+      }
+
     def function(name:String, fArgsLen: Int): Matcher =
       (input: Seq[Node]) =>  input match {
         case Func(fName,_,fArgs)+:tail if fName == name && fArgs.size == fArgsLen => {
@@ -159,11 +197,11 @@ object NodeRewriter {
       //func with no fArgs, 1 barg  ~ X randomNodes ~ 1empty bArg   , transform into 2bArg func
       None
     }
-    def innerFunction(name:String): Matcher =
+    def innerFunctionPrefix(name:String): Matcher =
       (input: Seq[Node]) =>  input match {
         case FuncArg(values,trailing)+:tail if values.nonEmpty => {
           values.head match {
-            case Func(fName,Seq(),Seq()) if fName==name => Some(Match(1,Seq(values.tail)))  //stripaj zadnji dio italic string \/
+            case Func(fName,Seq(),Seq()) if fName.startsWith(name) => Some(Match(1,Seq(values.tail)))  //stripaj zadnji dio italic string \/
             case _ => None
           }
         }
@@ -206,9 +244,10 @@ object NodeRewriter {
     val italicBlock = (in: Input,m: Match) => {//type guaranteed by matcher
       TextNode("<it>")+:in.head.asInstanceOf[Func].funcArg.head.value:+TextNode("</it>")
     }
-    val italicInnerBlock = (in: Input,m: Match) => {
-      TextNode("<it>")+:in.head.asInstanceOf[FuncArg].value.tail:+TextNode("</it>")
-    }
+    val innerBlock = (blockName: String) =>
+      (in: Input,m: Match) => {
+        TextNode(s"<$blockName>")+:in.head.asInstanceOf[FuncArg].value.tail:+TextNode(s"</$blockName>")
+      }
     val commentedSlika = (in: Input,m: Match) => in
     val funcItalicBlock = (in: Input, m: Match) => {
       val fIn = in.head.asInstanceOf[Func]
@@ -220,6 +259,17 @@ object NodeRewriter {
       val opent = Func("begin",Seq.empty,Seq(FuncArg(Seq(TextNode(bIn.tag)),"")))
       val closet = Func("end",Seq.empty,Seq(FuncArg(Seq(TextNode(bIn.tag)),"")))
       Seq(BlockFunc(bIn.tag,opent,closet,bIn.nested))
+    }
+    val flattenBlock = (in: Input, m: Match) => {
+      val bIn = in.head.asInstanceOf[BlockFunc]
+      bIn.nested
+    }
+    val flattenFunc = (in: Input, m: Match) => {
+      val fIn = in.head.asInstanceOf[Func]
+      fIn.funcArg.head.value
+    }
+    val flattenInner = (in: Input, m: Match) => {
+      m.groups.head
     }
   }
 
