@@ -22,8 +22,8 @@ class RuleService {
   private def parseRules(input: String): Map[String,Seq[Rule]] = {
     val parseTree = RuleParser.parse(input).get.nodes
     val rulesPerPath = parseTree.map({
-      case Block(head,trans) => ("root-"+head.classes.map(_.value).mkString("-"),trans.map(t=> Rule(t.from.value.r,t.to.value)))
-      case a: Transformer => ("root", Seq(Rule(a.from.value.r,a.to.value)))
+      case Block(head,trans) => ("root-"+head.classes.map(_.value).mkString("-"),trans.map(t=> Rule(t.from.value.r,t.to.map(_.value).getOrElse(""))))
+      case a: Transformer => ("root", Seq(Rule(a.from.value.r,a.to.map(_.value).getOrElse(""))))
     }).groupBy(_._1).map { case (key,value) => (key,value.map(_._2).flatten)}
     rulesPerPath
   }

@@ -11,7 +11,7 @@ object Terminal {
 
     val subtrees = r.nodes.map {
       case Block(head,trans) => nodeSubtree(head.classes,nodeToTransformers(trans))
-      case Transformer(from,to) => RuleNode("root",Seq(Rule(from.value.r,to.value)),Seq.empty)
+      case Transformer(from,to) => RuleNode("root",Seq(Rule(from.value.r,to.map(_.value).getOrElse(""))),Seq.empty)
       case _ => RuleNode("root",Seq.empty,Seq.empty)
     }
 
@@ -58,7 +58,7 @@ object Terminal {
     clzz match {
       case clz +: IndexedSeq() => {
         val name = clz.value
-        val rules = transformers.map(trans => Rule(trans.from.value.r, trans.to.value))
+        val rules = transformers.map(trans => Rule(trans.from.value.r, trans.to.map(_.value).getOrElse("")))
         RuleNode(name,rules,Seq.empty)
       }
       case clz +: rest => RuleNode(clz.value,Seq.empty,Seq(nodeSubtree(rest, transformers)))

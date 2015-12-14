@@ -21,7 +21,7 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
   def descend(node: Node, ctx: Seq[String]): Node = {
     node match {
       case InlineMath(value)            => InlineMath(value) //TODO don't rewrite math tags
-      case BlockMath(value)            => BlockMath(value)
+      case BlockMath(value)            => BlockMath(rewriteText(value,Seq("root-math")))
       case TextNode(value)            => TextNode(rewriteText(value,ctx))
       case BlockArg(vals,tail)        => BlockArg(transformList(vals,ctx),tail)
       case FuncArg(vals,tail)         => FuncArg(transformList(vals,ctx),tail)
@@ -99,7 +99,23 @@ object NodeRewriter {
     (Matchers.function("bigskip",0),  Seq(Rewriters.remove)),
     (Matchers.innerFunction("it"),    Seq(Rewriters.italicInnerBlock)),
     (Matchers.innerFunction("it"),    Seq(Rewriters.italicInnerBlock)),
-    (Matchers.funcItalicBlock,  Seq(Rewriters.funcItalicBlock))
+    (Matchers.funcItalicBlock,  Seq(Rewriters.funcItalicBlock)),
+
+    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock)),
+    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock)),
+
+    (Matchers.function("break",0), Seq(Rewriters.remove)),
+    (Matchers.function("newpage",0),Seq(Rewriters.remove)),
+    (Matchers.function("Prelomi",0),Seq(Rewriters.remove)),
+
+    (Matchers.function("ujedan",0),Seq(Rewriters.remove)),
+    (Matchers.function("udva",0),Seq(Rewriters.remove)),
+    (Matchers.function("utri",0),Seq(Rewriters.remove)),
+    (Matchers.function("ucetiri",0),Seq(Rewriters.remove)),
+    (Matchers.function("upet",0),Seq(Rewriters.remove)),
+    (Matchers.function("tudva",0),Seq(Rewriters.remove)),
+    (Matchers.function("tutri",0),Seq(Rewriters.remove)),
+    (Matchers.function(">",0),Seq(Rewriters.remove))
   )
 
   //MATCHERI
@@ -126,6 +142,13 @@ object NodeRewriter {
       (input: Seq[Node]) =>  input match {
         case Func(fName,_,fArgs)+:tail if fName == name && fArgs.size == fArgsLen => {
           Some(Match(1,Seq.empty))
+        }
+        case _ => None
+      }
+    def blockFunction(tag: String): Matcher =
+      (input: Seq[Node]) =>  input match {
+        case BlockFunc(tagVal,open,close,nested)+:tail if tagVal == tag && open.asInstanceOf[Func].funcArg.isEmpty => {
+          Some(Match(1,Seq(nested)))
         }
         case _ => None
       }
@@ -160,6 +183,11 @@ object NodeRewriter {
         case _ => None
       }
     }
+    def funcFunc(first: String, seccond: String): Matcher =
+      (input: Seq[Node]) => input match {
+        case Func(f1,_,_)::Func(f2,_,_)::tail  if first == f1 && seccond == f2 => Some(Match(2,Seq.empty))
+        case _ => None
+      }
   }
 
 
@@ -184,6 +212,12 @@ object NodeRewriter {
       val fIn = in.head.asInstanceOf[Func]
       val lastFArg = fIn.funcArg.last
       Seq(Func(fIn.name,fIn.bArgs,fIn.funcArg.seq.dropRight(1)),FuncArg(lastFArg.value,lastFArg.tail))
+    }
+    val toBeginEndBlock = (in: Input, m: Match) => {
+      val bIn = in.head.asInstanceOf[BlockFunc]
+      val opent = Func("begin",Seq.empty,Seq(FuncArg(Seq(TextNode(bIn.tag)),"")))
+      val closet = Func("end",Seq.empty,Seq(FuncArg(Seq(TextNode(bIn.tag)),"")))
+      Seq(BlockFunc(bIn.tag,opent,closet,bIn.nested))
     }
   }
 

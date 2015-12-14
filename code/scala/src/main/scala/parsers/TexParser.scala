@@ -36,7 +36,7 @@ object TParser {
     }
 
     def functionNameRule = rule {
-      oneOrMore(AlphaNum | "_" | "=" | ">" | "<" | "-" | ":" | "^" | ".")
+      oneOrMore(AlphaNum | "_" | "=" | ">" | "<" | "-" | ":" | "^" | "." | "*")
     }
 
     def argumentRule = rule {

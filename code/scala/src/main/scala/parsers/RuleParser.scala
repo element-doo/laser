@@ -10,7 +10,7 @@ object RuleParser {
   case class Document(nodes: Seq[Node])
   case class Block(head: BlockHead,transformers: Seq[Transformer]) extends Node
   case class BlockHead(classes: Seq[Class])
-  case class Transformer(from: FromTransformer, to: ToTransformer) extends Line
+  case class Transformer(from: FromTransformer, to: Option[ToTransformer]) extends Line
   case class FromTransformer(value: String)
   case class ToTransformer(value: String)
   case class Class(value:String)
@@ -40,7 +40,7 @@ object RuleParser {
     def stripSpace = rule { zeroOrMore(" ") }
 
     def transformerRule = rule {
-      fromTransRule ~ transformSeparatorRule ~ toTransRule ~> Transformer
+      fromTransRule ~ transformSeparatorRule ~ optional(toTransRule) ~> Transformer
     }
 
     def latinExtended = rule {// Latin supplement,extendedA, extendedB -> 80 - 24f
@@ -48,7 +48,7 @@ object RuleParser {
     }
 
     def transformSeparatorRule = rule {
-      oneOrMore(" ") ~ "=>" ~ oneOrMore(" ")
+      oneOrMore(" ") ~ "=>" ~ zeroOrMore(" ")
     }
   }
 
