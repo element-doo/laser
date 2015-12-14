@@ -32,8 +32,8 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
       }
       case BlockFunc(tag, open,close,vals) => BlockFunc(
         tag
-        , descend(open,ctx:+tag)
-        , descend(close,ctx:+tag)
+        , open //TODO dont apply rules to tags
+        , close
         , transformList(vals, ctx:+tag)
       )
       case Document(nodes)            => Document(transformList(nodes,ctx))

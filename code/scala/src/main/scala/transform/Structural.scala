@@ -65,7 +65,7 @@ object Structural {
           val contextNodes = tail.take(index)
           val closingNode = tail(index)
           val processedNestedNodes = process(contextNodes)
-          val tag = head.asInstanceOf[RawFunc].name
+          val tag = head.asInstanceOf[RawFunc].funcArg.head.value.head.asInstanceOf[RawText].value
           BlockFunc(tag,head,closingNode,processedNestedNodes)
         }).getOrElse({
           processSingle(head)
