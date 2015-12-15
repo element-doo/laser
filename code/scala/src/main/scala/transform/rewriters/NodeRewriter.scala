@@ -104,8 +104,9 @@ object NodeRewriter {
 
     (Matchers.funcItalicBlock,  Seq(Rewriters.funcItalicBlock)),
 
-    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock)),
-    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock)),
+    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align"))),
+    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather"))),
+    (Matchers.blockFunction("aligned"),  Seq(Rewriters.toBeginEndBlock("align"))),
 
     (Matchers.function("break",0), Seq(Rewriters.remove)),
     (Matchers.function("newpage",0),Seq(Rewriters.remove)),
@@ -119,7 +120,6 @@ object NodeRewriter {
     (Matchers.function("tudva",0),Seq(Rewriters.remove)),
     (Matchers.function("tutri",0),Seq(Rewriters.remove)),
     (Matchers.function(">",0),Seq(Rewriters.remove)),
-
 
     (Matchers.funcFunc("global","lhead"),Seq(Rewriters.remove)),
     (Matchers.funcFunc("global","rhead"),Seq(Rewriters.remove)),
@@ -152,7 +152,6 @@ object NodeRewriter {
 
     (Matchers.inlineMath("{}"),Seq(Rewriters.remove)),
 
-
     (Matchers.functionPrefix("pomakslike"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("epsfxsize"),Seq(Rewriters.remove)),
     (Matchers.function("praznired",0),Seq(Rewriters.remove)),
@@ -166,13 +165,6 @@ object NodeRewriter {
     (Matchers.functionPrefix("vglue"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("vskip"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("hskip"),Seq(Rewriters.remove))
-
-
-
-    //(Matchers.slikaComment,Seq(Rewriters.remove))
-
-
-
 
   )
 
@@ -300,11 +292,12 @@ object NodeRewriter {
       val lastFArg = fIn.funcArg.last
       Seq(Func(fIn.name,fIn.bArgs,fIn.funcArg.seq.dropRight(1)),FuncArg(lastFArg.value,lastFArg.tail))
     }
-    val toBeginEndBlock = (in: Input, m: Match) => {
+    val toBeginEndBlock = (tag: String) =>
+     (in: Input, m: Match) => {
       val bIn = in.head.asInstanceOf[BlockFunc]
-      val opent = Func("begin",Seq.empty,Seq(FuncArg(Seq(TextNode(bIn.tag)),"")))
-      val closet = Func("end",Seq.empty,Seq(FuncArg(Seq(TextNode(bIn.tag)),"")))
-      Seq(BlockFunc(bIn.tag,opent,closet,bIn.nested))
+      val opent = Func("begin",Seq.empty,Seq(FuncArg(Seq(TextNode(tag)),"")))
+      val closet = Func("end",Seq.empty,Seq(FuncArg(Seq(TextNode(tag)),"")))
+      Seq(BlockFunc(tag,opent,closet,bIn.nested))
     }
     val flattenBlock = (in: Input, m: Match) => {
       val bIn = in.head.asInstanceOf[BlockFunc]
