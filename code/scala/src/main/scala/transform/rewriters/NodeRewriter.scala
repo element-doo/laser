@@ -152,13 +152,20 @@ object NodeRewriter {
 
     (Matchers.inlineMath("{}"),Seq(Rewriters.remove)),
 
+
     (Matchers.functionPrefix("pomakslike"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("epsfxsize"),Seq(Rewriters.remove)),
+    (Matchers.function("praznired",0),Seq(Rewriters.remove)),
     (Matchers.function("textBojaPoglavlja",0),Seq(Rewriters.remove)),
     (Matchers.function("textBlack",0),Seq(Rewriters.remove)),
 
     (Matchers.function("tv",1), Seq(Rewriters.flattenFunc)),
-    (Matchers.innerFunctionPrefix("parindent"), Seq(Rewriters.flattenInner))
+    (Matchers.innerFunctionPrefix("parindent"), Seq(Rewriters.flattenInner)),
+    (Matchers.functionPrefix("leftskip"),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix("rightskip"),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix("vglue"),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix("vskip"),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix("hskip"),Seq(Rewriters.remove))
 
 
 
