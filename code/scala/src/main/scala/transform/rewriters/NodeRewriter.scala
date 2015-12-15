@@ -152,7 +152,15 @@ object NodeRewriter {
 
     (Matchers.inlineMath("{}"),Seq(Rewriters.remove)),
 
-    (Matchers.functionPrefix("pomakslike"),Seq(Rewriters.remove))
+    (Matchers.functionPrefix("pomakslike"),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix("epsfxsize"),Seq(Rewriters.remove)),
+    (Matchers.function("textBojaPoglavlja",0),Seq(Rewriters.remove)),
+    (Matchers.function("textBlack",0),Seq(Rewriters.remove)),
+
+    (Matchers.function("tv",1), Seq(Rewriters.flattenFunc)),
+    (Matchers.innerFunctionPrefix("parindent"), Seq(Rewriters.flattenInner))
+
+
 
     //(Matchers.slikaComment,Seq(Rewriters.remove))
 
@@ -256,7 +264,7 @@ object NodeRewriter {
       }
     def inlineMath(value: String): Matcher =
       (input: Seq[Node]) => input match {
-        case InlineMath(value)::tail if value == value => Some(Match(1,Seq.empty))
+        case InlineMath(math)::tail if value == math => Some(Match(1,Seq.empty))
         case _ => None
       }
   }
