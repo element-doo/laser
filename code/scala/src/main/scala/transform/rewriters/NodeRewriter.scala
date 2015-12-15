@@ -128,7 +128,7 @@ object NodeRewriter {
 
     (Matchers.function("BezBroja",0),Seq(Rewriters.remove)),
     (Matchers.function("Headlines",0),Seq(Rewriters.remove)),
-    (Matchers.function("BROJnaslov=",0),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix("BROJnaslov="),Seq(Rewriters.remove)),
     (Matchers.function("Primjertrue",0),Seq(Rewriters.remove)),
     (Matchers.function("Primjerfalse",0),Seq(Rewriters.remove)),
     (Matchers.function("OkvirPrimjer",0),Seq(Rewriters.remove)),
