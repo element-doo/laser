@@ -148,7 +148,11 @@ object NodeRewriter {
 
     (Matchers.function("BRzadatakp=0",0), Seq(Rewriters.genFun("setCounter",Seq("brojzadatkap","0")))),
 
-    (Matchers.blockFunction("odg"),Seq(Rewriters.remove))
+    (Matchers.blockFunction("odg"),Seq(Rewriters.remove)),
+
+    (Matchers.inlineMath("{}"),Seq(Rewriters.remove)),
+
+    (Matchers.functionPrefix("pomakslike"),Seq(Rewriters.remove))
 
     //(Matchers.slikaComment,Seq(Rewriters.remove))
 
@@ -248,6 +252,11 @@ object NodeRewriter {
     def funcFunc(first: String, seccond: String): Matcher =
       (input: Seq[Node]) => input match {
         case Func(f1,_,_)::Func(f2,_,_)::tail  if first == f1 && seccond == f2 => Some(Match(2,Seq.empty))
+        case _ => None
+      }
+    def inlineMath(value: String): Matcher =
+      (input: Seq[Node]) => input match {
+        case InlineMath(value)::tail if value == value => Some(Match(1,Seq.empty))
         case _ => None
       }
   }
