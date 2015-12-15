@@ -15,7 +15,11 @@ object Structural {
     val pTree = TParser.parse(originalText).get
     val processed = process(pTree.nodes)
     val document = Document(processed)
-    print(Descender(rules).descend(document,Seq("root")).asInstanceOf[Document].nodes)
+    val descender = Descender(rules)
+    //todo add default rules {dijakritici}
+
+    val transformedText = print(descender.descend(document,Seq("root")).asInstanceOf[Document].nodes)
+    descender.rewriteText(transformedText,Seq("root","post"))
   }
 
   def parse(originalText: String): Seq[RawNode] = {
