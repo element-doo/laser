@@ -52,9 +52,12 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
   def rewriteText(value: String,ctx: Seq[String]): String = {
     //rewrite rules, math or plaintext, depending on the class path
     val oRules = textRules.get(ctx.mkString("-"))
-    oRules.map(rules => {
-      rules.foldLeft(value)((acc:String,rule: Rule) => rule.from.replaceAllIn(acc,rule.to))
-    }).getOrElse(value)
+    val globalRules = textRules.get("root-global")
+    rewrite(value, oRules.getOrElse(Seq.empty)++globalRules.getOrElse(Seq.empty))
+  }
+
+  def rewrite(value: String, rules: Seq[Rule]): String = {
+    rules.foldLeft(value)((acc:String,rule: Rule) => rule.from.replaceAllIn(acc,rule.to))
   }
 
   def rewrite(nodes: Seq[Node]): Seq[Node]= {
@@ -131,7 +134,7 @@ object NodeRewriter {
     (Matchers.function("OkvirPrimjer",0),Seq(Rewriters.remove)),
     (Matchers.function("vss",0),Seq(Rewriters.remove)),
 
-    (Matchers.functionPrefix("vbox"),Seq(Rewriters.remove)),
+    //(Matchers.functionPrefix("vbox"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("vglue"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("vskip"),Seq(Rewriters.remove)),
 
@@ -141,7 +144,13 @@ object NodeRewriter {
     (Matchers.blockFunction("umetak"),Seq(Rewriters.flattenBlock)),
     (Matchers.blockFunction("Umetak"),Seq(Rewriters.flattenBlock)),
 
-    (Matchers.innerFunctionPrefix("rightskip"),Seq(Rewriters.flattenInner))
+    (Matchers.innerFunctionPrefix("rightskip"),Seq(Rewriters.flattenInner)),
+
+    (Matchers.function("BRzadatakp=0",0), Seq(Rewriters.genFun("setCounter",Seq("brojzadatkap","0")))),
+
+    (Matchers.blockFunction("odg"),Seq(Rewriters.remove))
+
+    //(Matchers.slikaComment,Seq(Rewriters.remove))
 
 
 
@@ -193,9 +202,22 @@ object NodeRewriter {
         case _ => None
       }
     def slikaComment(input: Seq[Node]): Option[Match] = {
-      //input.head.isInstanceOf[Func]
+      val res = if (input.head.isInstanceOf[Func] && input.head.asInstanceOf[Func].name.toLowerCase().startsWith("slika")) {
+        val func = input.head.asInstanceOf[Func]
+        val (comment,size) = if (func.bArgs.size == 2) ("",0) else {
+          val txts = input.tail.takeWhile(_.isInstanceOf[TextNode])
+          val closingBArg = input.tail.drop(txts.size).head
+          if(closingBArg.isInstanceOf[BlockArg] && closingBArg.asInstanceOf[BlockArg].value.size==0) {
+            val joined = txts.foldLeft("")((a,b:Node) => a+b.asInstanceOf[TextNode].value)
+            (joined,txts.size+1)
+          } else ("",0)
+        }
+        Some(Match(1+size,Seq(Seq(TextNode(comment)))))
+      } else {
+        None
+      }
+      res
       //func with no fArgs, 1 barg  ~ X randomNodes ~ 1empty bArg   , transform into 2bArg func
-      None
     }
     def innerFunctionPrefix(name:String): Matcher =
       (input: Seq[Node]) =>  input match {
@@ -271,6 +293,12 @@ object NodeRewriter {
     val flattenInner = (in: Input, m: Match) => {
       m.groups.head
     }
+    val genFun = (funName: String, fArgs: Seq[String]) =>
+      (in: Input, m: Match) => {
+        val args1= FuncArg(Seq(TextNode(fArgs.head)), "")
+        val args2= FuncArg(Seq(TextNode(fArgs.tail.head)), "")
+        Seq(Func(funName,Seq.empty,Seq(args1,args2)))
+      }
   }
 
 

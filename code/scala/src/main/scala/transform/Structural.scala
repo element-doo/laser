@@ -26,7 +26,7 @@ object Structural {
   private def closingTagLookup(closingTag: String, searchSpace: Seq[RawNode], farg: Option[String]): Option[Int] = {
     searchSpace.indexWhere(node => {
       node match {
-        case RawFunc(name,_,Seq()) => (name == closingTag || name==closingTag+"*") && farg.isEmpty
+        case RawFunc(name,_,Seq()) => (name.toLowerCase() == closingTag.toLowerCase || name==closingTag.toLowerCase()+"*") && farg.isEmpty
         case RawFunc(name, _, Seq(fArg:RawFArg)) => {
           (name == closingTag) && farg.isDefined && (fArg.value.head.asInstanceOf[RawText].value == farg.get) //osigurati da je stvarno rawText
         }
@@ -44,7 +44,7 @@ object Structural {
       case RawFunc("begin",_,Seq(fArg:RawFArg)) => {
         (Some("end"), Some(fArg.value.head.asInstanceOf[RawText].value))
       }   //klasican begin,end
-      case RawFunc(name,_,Seq()) => (Some("end"+name), None)//beginTag,  endTag
+      case RawFunc(name,_,Seq()) => (Some("end"+name.toLowerCase()), None)//beginTag,  endTag
       case _ => (None,None)                          //zatvoren sam u sebi
     }
   }
@@ -90,7 +90,11 @@ object Structural {
       case RawFunc(name,bArgs,fArgs)  => {
         val pBargs = bArgs.map(barg => RawBArg(process(barg.value),barg.tail))
         val pFargs = fArgs.map(farg => RawFArg(process(farg.value),farg.tail))
-        RawFunc(name,pBargs,pFargs)
+        //TODO dirty hack
+        if(name.isEmpty && pBargs.isEmpty && pFargs.isEmpty)
+          RawText("\\")
+        else
+          RawFunc(name,pBargs,pFargs)
       }
     }
   }
