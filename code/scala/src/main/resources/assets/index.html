@@ -9,9 +9,10 @@
 
 <div>
     <div>
-        <textarea class="rule-editor "  rows="10" placeholder="GIEV UR TEX NAO"></textarea>
+        <textarea class="rule-editor "  rows="10" placeholder="rules: fromRegex  =>  to"></textarea>
         <button class="validate-rules btn btn-primary" type="button">Validate rules</button>
         <button class="transform btn btn-large btn-primary" type="button">Transform</button>
+        <a href="help.html">HELP!</a>
     </div>
     <div class="editors">
             <textarea class="editor editor-left"  rows="50" placeholder="Input text to replace"></textarea>
@@ -51,6 +52,10 @@
                    $(".editor-right").val(res.responseText)
                });
 
+           });
+
+           $(".editor-left").on("scroll", function(){
+               $(".editor-right").scrollTop(this.scrollTop)
            });
 </script>
 </body>

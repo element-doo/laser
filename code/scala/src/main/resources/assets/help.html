@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<pre>
+
+    pravilo se primjenjuje na sve textualne elemente koji se ne nalaze niti u jednom "tagu"
+    XXXXXXX => DDDDD
+
+
+    pravilo se primjenjuje samo na text elemente koji se nalaze unutar taga "tagA"
+    tagA {
+    XXXXXXX => EEEEE
+    }
+
+    pravilo se primjenjuje samo na text elemente koji se nalaze unutar taga "tagB" koji se pak nalazi pod tagom "tagA"
+    tagA tagB {
+    XXXXXXX => FFFFF
+    }
+
+    primjer:
+
+    ####pravila:####
+    pas => PAS
+    prvi {
+    macka => MACKA
+    }
+    prvi drugi {
+    automobil => AUTOMOBIL
+    }
+    ################
+
+
+    ###TEXT###################
+    pas macka automobil
+    \begin{prvi}
+    pas macka automobil
+    \drugi
+    pas macka automobil
+    \enddrugi
+    \end{prvi}
+    ##########################
+
+
+
+    ####REZULTAT##############
+    PAS macka automobil
+    \begin{prvi}
+    pas MACKA automobil
+    \drugi
+    pas macka AUTOMOBIL
+    \enddrugi
+    \end{prvi}
+    ##########################
+
+
+    posebna pravila primjenjuju se na "math" tag oblika $$ xxxxx $$ i ona se navode oblikom
+    math {
+      XXXXX => YYYYY
+    }
+
+    pravila koja ce se primjeniti na text neovisno o tagu u kojem se nalaze (osim math) potrebno ih je navesti oblikom
+    global {
+       XXXX => YYYY
+    }
+
+
+
+</pre>
+</body>
+
+
+
+</html>
