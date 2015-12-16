@@ -33,7 +33,7 @@ object RuleParser {
     }
 
     def toTransRule = rule {
-      capture(oneOrMore(latinExtended) ~ oneOrMore(latinExtended | " "))   ~> ToTransformer
+      capture(oneOrMore(latinExtended) ~ zeroOrMore(latinExtended | " "))   ~> ToTransformer
     }
 
     def newLine = rule { "\r\n" | "\r" | "\n" }
