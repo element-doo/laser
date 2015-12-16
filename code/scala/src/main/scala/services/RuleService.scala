@@ -16,7 +16,7 @@ class RuleService {
   }
 
   def transformTree(text: String, rules: String) = {
-    Structural.transform(text,parseRules(rules))
+    Structural.transform(text,parseRules(rules++defaultRules))
   }
 
   private def parseRules(input: String): Map[String,Seq[Rule]] = {
@@ -29,4 +29,31 @@ class RuleService {
   }
 
   private def buildRuleTree(rules: Seq[RuleNode]) = ???
+
+
+  val defaultRules =
+    """
+      |global {
+      |ss     =>  š
+      |dd     =>  đ
+      |cc     =>  č
+      |ch     =>  ć
+      |zz     =>  ž
+      |S[Ss]  =>  Š
+      |D[Dd]  =>  Đ
+      |C[Cc]  =>  Č
+      |C[Hh]  =>  Ć
+      |Z[Zz]  =>  Ž
+      |(s)\|(s)  =>  $1$2
+      |(d)\|(d)  =>  $1$2
+      |(c)\|(c)  =>  $1$2
+      |(c)\|(h)  =>  $1$2
+      |(z)\|(z)  =>  $1$2
+      |(S)\|([Ss])  =>  $1$2
+      |(D)\|([Dd])  =>  $1$2
+      |(C)\|([Cc])  =>  $1$2
+      |(C)\|([Hh])  =>  $1$2
+      |(Z)\|([Zz])  =>  $1$2
+      |}
+    """.stripMargin
 }
