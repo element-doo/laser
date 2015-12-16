@@ -22,11 +22,13 @@ class RuleService {
   private def parseRules(input: String): Map[String,Seq[Rule]] = {
     val parseTree = RuleParser.parse(input).get.nodes
     val rulesPerPath = parseTree.map({
-      case Block(head,trans) => ("root-"+head.classes.map(_.value).mkString("-"),trans.map(t=> Rule(t.from.value.r,t.to.map(_.value).getOrElse(""))))
-      case a: Transformer => ("root", Seq(Rule(a.from.value.r,a.to.map(_.value).getOrElse(""))))
+      case Block(head,trans) => ("root-"+head.classes.map(_.value).mkString("-"),trans.map(t=> toRule(t.from.value,t.to.map(_.value).getOrElse(""))))
+      case a: Transformer => ("root", Seq(toRule(a.from.value,a.to.map(_.value).getOrElse(""))))
     }).groupBy(_._1).map { case (key,value) => (key,value.map(_._2).flatten)}
     rulesPerPath
   }
+
+  private def toRule(from: String, to: String) : Rule = Rule(from.r,to.replace("\\n","\n"))
 
   private def buildRuleTree(rules: Seq[RuleNode]) = ???
 
@@ -34,7 +36,7 @@ class RuleService {
   val defaultRules =
     """
       |global {
-      |ss     =>  š
+      |ss     =>  šr
       |dd     =>  đ
       |cc     =>  č
       |ch     =>  ć
@@ -56,5 +58,10 @@ class RuleService {
       |(Z)\|([Zz])  =>  $1$2
       |<<< =>
       |}
+      |
+      |post {
+      | \\\\ => \\\\\\\\
+      |}
+      |
     """.stripMargin
 }
