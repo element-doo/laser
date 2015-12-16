@@ -20,7 +20,7 @@ object TParser {
   case class TextNode(value: String) extends Node
   trait MathNode extends Node
   case class InlineMath(value: String) extends MathNode
-  case class BlockMath(value: String) extends MathNode
+  case class BlockMath(values: Seq[Node]) extends MathNode
 
   //TODO must signal whether the entire input has been consumed, shoud fail if doesnt parse EOI
 
@@ -56,7 +56,7 @@ object TParser {
     }
 
     def blockMathRule = rule {
-      "$$" ~ capture(oneOrMore(!"$$" ~ ANY)) ~ "$$" ~> BlockMath
+      "$$" ~ nodeRule ~ "$$" ~> BlockMath
     }
 
     def inlineMathRule = rule {
