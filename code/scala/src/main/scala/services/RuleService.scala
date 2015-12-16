@@ -36,7 +36,7 @@ class RuleService {
   val defaultRules =
     """
       |global {
-      |ss     =>  šr
+      |ss     =>  š
       |dd     =>  đ
       |cc     =>  č
       |ch     =>  ć
