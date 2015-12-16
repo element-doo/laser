@@ -54,6 +54,7 @@ class RuleService {
       |(C)\|([Cc])  =>  $1$2
       |(C)\|([Hh])  =>  $1$2
       |(Z)\|([Zz])  =>  $1$2
+      |<<< =>
       |}
     """.stripMargin
 }
