@@ -21,14 +21,7 @@ object Terminal {
     //TODO auto mapping
     val rootRules = rulesPerTag.rules
     val mathRules = rulesPerTag.children.headOption.map(_.rules).getOrElse(Seq.empty)
-/*
-    t.text.foldLeft(""){ (acc,curr) => {
-      acc + (curr match {
-        case FreeTextNode(value) => transformText(value,rootRules)
-        case MathNode(value) => transformText(value,mathRules)
-      })
-    }}
-    */
+
   }
 
 

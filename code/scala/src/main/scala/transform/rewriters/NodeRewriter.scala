@@ -21,7 +21,7 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
   def descend(node: Node, ctx: Seq[String]): Node = {
     node match {
       case InlineMath(value)            => InlineMath(value) //TODO don't rewrite math tags
-      case BlockMath(value)            => BlockMath(rewriteText(value,Seq("root-math")))
+      case BlockMath(values)            => BlockMath(transformList(values,Seq("root-math")))
       case TextNode(value)            => TextNode(rewriteText(value,ctx))
       case BlockArg(vals,tail)        => BlockArg(transformList(vals,ctx),tail)
       case FuncArg(vals,tail)         => FuncArg(transformList(vals,ctx),tail)

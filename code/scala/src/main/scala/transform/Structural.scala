@@ -90,7 +90,8 @@ object Structural {
       case RawBArg(nested,tail)            => RawBArg(process(nested),tail)
       case RawFArg(nested,tail)            => RawFArg(process(nested),tail)
       case text:RawText                    => text
-      case math:RawMath                    => math
+      case inlineMath:InlineMath           => inlineMath
+      case BlockMath(nodes)                => BlockMath(process(nodes))
       case RawFunc(name,bArgs,fArgs)  => {
         val pBargs = bArgs.map(barg => RawBArg(process(barg.value),barg.tail))
         val pFargs = fArgs.map(farg => RawFArg(process(farg.value),farg.tail))
@@ -119,7 +120,7 @@ object Structural {
         case RawFArg(children, tail) => {
           "{" + print(children) + "}" + tail
         }
-        case BlockMath(value) => "$$" + value + "$$"
+        case BlockMath(values) => "$$" + print(values) + "$$"
         case InlineMath(value) => "$" + value + "$"
         case RawText(value) => value
       }
