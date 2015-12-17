@@ -13,8 +13,6 @@ object Store {
     rules
   }
   def readRules: Try[String] = Try {
-    val pp = Path("") / "Users" / "mladen" / "Documents" / "rules3.txt"
-    println("modified "+path.lastModified)
-    pp.inputStream.string
+    path.inputStream.string
   }
 }
