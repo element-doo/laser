@@ -1,3 +1,5 @@
+import java.io.File
+import java.io.File
 import java.util.concurrent.Executors
 
 import akka.actor.{Props, ActorSystem}
@@ -5,20 +7,30 @@ import akka.io.IO
 import akka.pattern.ask
 import parsers.TParser
 import parsers.TParser.{Document, Node, TextNode}
-import services.RuleService
+import services.{Store, RuleService}
 import spray.can.Http
 import transform.Structural
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import api._
 
+
 import scala.util.Try
+import scalax.file.Path
 import scalax.io.Resource
 
 
 object Launcher {
   def main(args: Array[String]): Unit = {
     implicit val executionContext = ExecutionContext.fromExecutor(Executors.newCachedThreadPool)
+
+    val default = Store.readRules
+    if(default.isSuccess) {
+      println("Stored rules: \n" + default.get)
+    } else {
+      Store.storeRules("")
+    }
+
     val system = ActorSystem("LAZR")
     val webService = system.actorOf(Props(classOf[WebService]), "web-service")
     val bind = Http.Bind(
@@ -37,11 +49,8 @@ object StaticLauncher {
 
   def main (args: Array[String]){
      val originalText = Try {
-      Resource.fromClasspath("full.txt").string   //"element/text/origtxt/em1-01.txt"
+      Resource.fromClasspath("full.txt").string   //"element/text/origtxt/em1-01.txt"D
     } getOrElse(sys.error("Could not open file!"))
-
-    //val a = Structural.transform(originalText)
-    //val b = Descender.descend(Document(a),Seq("root"))
     println(new RuleService().transformTree(originalText,"").toString)
   }
 }

@@ -9,7 +9,7 @@
 
 <div>
     <div>
-        <textarea class="rule-editor "  rows="10" placeholder="rules: fromRegex  =>  to"></textarea>
+        <textarea class="rule-editor"  rows="10" placeholder="rules: fromRegex  =>  to"></textarea>
         <button class="validate-rules btn btn-primary" type="button">Validate rules</button>
         <button class="transform btn btn-large btn-primary" type="button">Transform</button>
         <a href="help.html">HELP!</a>
@@ -22,6 +22,14 @@
 
 
 <script>
+            $.ajax({
+                type: 'GET',
+                url: '/rules/default',
+                contentType: "application/json",
+                dataType: 'json'
+            }).complete(function(res) {
+                $(".rule-editor").val(res.responseText)
+            });
 
            $('.validate-rules').click(function(event) {
                var context = $(this);
@@ -51,6 +59,16 @@
                }).complete(function(res) {
                    $(".editor-right").val(res.responseText)
                });
+
+               $.ajax({
+                   type: 'POST',
+                   url: '/rules/default',
+                   data: data.rules, // or JSON.stringify ({name: 'jonas'}),
+                   contentType: "application/json",
+                   dataType: 'json'
+               }).complete(function(res) {
+                   alert("stored: "+data)
+               })
 
            });
 
