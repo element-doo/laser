@@ -48,19 +48,13 @@ class WebService  extends HttpServiceActor {
       } ~
       path("default") {
         get {
-          val defaultRules = Try {
-            Store.readRules   //"element/text/origtxt/em1-01.txt"D
-          } getOrElse(sys.error("Could not open file!"))
-          complete(defaultRules)
+          complete(Store.readRules)
         } ~
         post {
-          entity(as[String]) { rules =>
-            Try {
-              Store.storeRules(rules)
-              complete(rules)
-            } getOrElse(sys.error("Could not open file!"))
+          entity(as[String]) { rules => {
+              complete(Store.storeRules(rules))
+            }
           }
-
         }
       }/*~
       path("transform") {
