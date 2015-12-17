@@ -29,6 +29,7 @@
                 dataType: 'json'
             }).complete(function(res) {
                 $(".rule-editor").val(res.responseText)
+                console.log("loaded rules: \n"+res.responseText)
             });
 
            $('.validate-rules').click(function(event) {
@@ -67,7 +68,7 @@
                    contentType: "application/json",
                    dataType: 'json'
                }).complete(function(res) {
-                   alert("stored: "+data)
+                   console.log("stored: "+data)
                })
 
            });
