@@ -22,7 +22,7 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
     node match {
       case InlineMath(value)            => InlineMath(value) //TODO don't rewrite math tags
       case BlockMath(values)            => BlockMath(transformList(values,Seq("root-math")))
-      case TextNode(value)            => TextNode(rewriteText(value,ctx))
+      case TextNode(value)            => TextNode(rewriteText(value,ctx,Some("global")))
       case BlockArg(vals,tail)        => BlockArg(transformList(vals,ctx),tail)
       case FuncArg(vals,tail)         => FuncArg(transformList(vals,ctx),tail)
       case Func(name,bArgs,fArgs)     => {
@@ -49,15 +49,15 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
     rewrite(transformedChildren)
   }
 
-  def rewriteText(value: String,ctx: Seq[String]): String = {
+  def rewriteText(value: String,ctx: Seq[String],include: Option[String]): String = {
     //rewrite rules, math or plaintext, depending on the class path
     val oRules = textRules.get(ctx.mkString("-"))
-    val globalRules = textRules.get("root-global")
+    val globalRules = include.map(inclusion => "root-"+inclusion).map(key => textRules.get(key)).flatten//textRules.get("root-"+include.get)
     rewrite(value, oRules.getOrElse(Seq.empty)++globalRules.getOrElse(Seq.empty))
   }
 
   def rewrite(value: String, rules: Seq[Rule]): String = {
-    rules.foldLeft(value)((acc:String,rule: Rule) => rule.from.replaceAllIn(acc,rule.to))
+    rules.foldLeft(value)((acc:String, rule: Rule) => rule.from.replaceAllIn(acc,rule.to))
   }
 
   def rewrite(nodes: Seq[Node]): Seq[Node]= {

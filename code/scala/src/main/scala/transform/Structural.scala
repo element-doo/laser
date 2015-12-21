@@ -12,14 +12,18 @@ object Structural {
 
 
   def transform(originalText: String, rules: Map[String,Seq[Rule]]): String = {
+    //val start = System.currentTimeMillis()
+    //println("Started")
     val pTree = TParser.parse(originalText).get
+    //val total = System.currentTimeMillis()-start
+    //println("total: "+total)
     val processed = process(pTree.nodes)
     val document = Document(processed)
     val descender = Descender(rules)
     //todo add default rules {dijakritici}
 
     val transformedText = print(descender.descend(document,Seq("root")).asInstanceOf[Document].nodes)
-    descender.rewriteText(transformedText,Seq("root","post"))
+    descender.rewriteText(transformedText,Seq("root","post"),None)
   }
 
   def parse(originalText: String): Seq[RawNode] = {
