@@ -149,6 +149,7 @@ object NodeRewriter {
     (Matchers.function("BRzadatakp=0",0), Seq(Rewriters.genFun("setCounter",Seq("brojzadatkap","0")))),
 
     (Matchers.blockFunction("odg"),Seq(Rewriters.remove)),
+    (Matchers.blockFunction("Odg"),Seq(Rewriters.remove)),
 
     (Matchers.inlineMath("{}"),Seq(Rewriters.remove)),
 
