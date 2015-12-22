@@ -24,7 +24,7 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
       case BlockMath(values)            => BlockMath(transformList(values,Seq("root-math")))
       case TextNode(value)            => TextNode(rewriteText(value,ctx,Some("global")))
       case BlockArg(vals,tail)        => BlockArg(transformList(vals,ctx),tail)
-      case FuncArg(vals,tail)         => FuncArg(transformList(vals,ctx),tail)
+      case FuncArg(vals,tail)         => rewrite(Seq(FuncArg(transformList(vals,ctx),tail))).head //bljuv
       case Func(name,bArgs,fArgs)     => {
         val nestedCtx = ctx:+name
         val pBargs = bArgs.map(barg => BlockArg(transformList(barg.value,nestedCtx),barg.tail))
@@ -119,7 +119,7 @@ object NodeRewriter {
     (Matchers.function("upet",0),Seq(Rewriters.remove)),
     (Matchers.function("tudva",0),Seq(Rewriters.remove)),
     (Matchers.function("tutri",0),Seq(Rewriters.remove)),
-    (Matchers.function(">",0),Seq(Rewriters.remove)),
+    (Matchers.functionPrefix(">"),Seq(Rewriters.remove)), //prefix i poseban matcher koji ispise ostatak imena, ako je razmak onda obican func
 
     (Matchers.funcFunc("global","lhead"),Seq(Rewriters.remove)),
     (Matchers.funcFunc("global","rhead"),Seq(Rewriters.remove)),
@@ -165,7 +165,8 @@ object NodeRewriter {
     (Matchers.functionPrefix("rightskip"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("vglue"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("vskip"),Seq(Rewriters.remove)),
-    (Matchers.functionPrefix("hskip"),Seq(Rewriters.remove))
+    (Matchers.functionPrefix("hskip"),Seq(Rewriters.remove)),
+    (Matchers.funcArg,Seq(Rewriters.flattenInner))
 
   )
 
@@ -267,6 +268,14 @@ object NodeRewriter {
         case InlineMath(math)::tail if value == math => Some(Match(1,Seq.empty))
         case _ => None
       }
+    def funcArg(input: Seq[Node]): Option[Match] = {
+      input match {
+        case FuncArg(values,_)::tail => {
+          Some(Match(1,Seq(values)))
+        }
+        case _ => None
+      }
+    }
   }
 
 
