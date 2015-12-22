@@ -61,6 +61,7 @@ class RuleService {
       |
       |post {
       | \\\\ => \\\\\\\\
+      | \\([\{\}]) => \\\\$1
       |}
       |
     """.stripMargin
