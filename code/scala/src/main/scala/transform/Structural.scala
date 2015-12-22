@@ -12,11 +12,11 @@ object Structural {
 
 
   def transform(originalText: String, rules: Map[String,Seq[Rule]]): String = {
-    //val start = System.currentTimeMillis()
-    //println("Started")
+    val start = System.currentTimeMillis()
+    println("Started")
     val pTree = TParser.parse(originalText).get
-    //val total = System.currentTimeMillis()-start
-    //println("total: "+total)
+    val total = System.currentTimeMillis()-start
+    println("total: "+total)
     val processed = process(pTree.nodes)
     val document = Document(processed)
     val descender = Descender(rules)
@@ -127,6 +127,7 @@ object Structural {
         case BlockMath(values) => "$$" + print(values) + "$$"
         case InlineMath(value) => "$" + value + "$"
         case RawText(value) => value
+        case Document(values) => print(values)
       }
     }
     nodes.map(prt).mkString

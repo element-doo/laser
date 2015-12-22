@@ -24,7 +24,7 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
       case BlockMath(values)            => BlockMath(transformList(values,Seq("root-math")))
       case TextNode(value)            => TextNode(rewriteText(value,ctx,Some("global")))
       case BlockArg(vals,tail)        => BlockArg(transformList(vals,ctx),tail)
-      case FuncArg(vals,tail)         => rewrite(Seq(FuncArg(transformList(vals,ctx),tail))).head //bljuv
+      case FuncArg(vals,tail)         => Document(rewrite(Seq(FuncArg(transformList(vals,ctx),tail)))) //bljuv
       case Func(name,bArgs,fArgs)     => {
         val nestedCtx = ctx:+name
         val pBargs = bArgs.map(barg => BlockArg(transformList(barg.value,nestedCtx),barg.tail))
