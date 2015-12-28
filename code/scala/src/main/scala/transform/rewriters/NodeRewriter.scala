@@ -318,7 +318,7 @@ object NodeRewriter {
       fIn.funcArg.head.value
     }
     val flattenInner = (in: Input, m: Match) => {
-      m.groups.head
+      m.groups.head:+TextNode(in.head.asInstanceOf[FuncArg].tail)
     }
     val genFun = (funName: String, fArgs: Seq[String]) =>
       (in: Input, m: Match) => {
