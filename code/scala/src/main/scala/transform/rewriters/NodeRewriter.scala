@@ -22,11 +22,11 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
   //TODO extract common descender
   def descend(node: Node, ctx: Seq[String]): Node = {
     node match {
-      case InlineMath(value)            => InlineMath(value) //TODO don't rewrite math tags
-      case BlockMath(values)            => BlockMath(transformList(values,Seq("root-math")))
+      case InlineMath(values)            => InlineMath(transformList(values,Seq("root","imath"))) //TODO don't rewrite math tags
+      case BlockMath(values)            => BlockMath(transformList(values,Seq("root","math")))
       case TextNode(value)            => TextNode(rewriteText(value,ctx,Some("global")))
       case BlockArg(vals,tail)        => BlockArg(transformList(vals,ctx),tail)
-      case FuncArg(vals,tail)         => Document(rewrite(Seq(FuncArg(transformList(vals,ctx),tail)))) //bljuv
+      case FuncArg(vals,tail)         => Document(rewrite(Seq(FuncArg(transformList(vals,ctx),tail)), ctx)) //bljuv
       case Func(name,bArgs,fArgs)     => {
         val nestedCtx = ctx:+name
         val pBargs = bArgs.map(barg => BlockArg(transformList(barg.value,nestedCtx),barg.tail))
@@ -47,8 +47,8 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
   def transformList(nodes: Seq[Node], ctx: Seq[String]): Seq[Node] = {
     //descendaj sam
     val transformedChildren = nodes.map(descend(_,ctx))
-    //transformiraj ako treba pa vrati
-    rewrite(transformedChildren)
+    //ako je ctx root-imath rewriteaj s drugim pravilima
+    rewrite(transformedChildren,ctx)
   }
 
   def rewriteText(value: String,ctx: Seq[String],include: Option[String]): String = {
@@ -62,11 +62,12 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
     rules.foldLeft(value)((acc:String, rule: Rule) => rule.from.replaceAllIn(acc,rule.to))
   }
 
-  def rewrite(nodes: Seq[Node]): Seq[Node]= {
+  def rewrite(nodes: Seq[Node],ctx: Seq[String]): Seq[Node]= {
     //find matcher that matches, transform, rerun again (on the same input or down the tail)
     //if no match, continue down the tail
-    val matchingPerMatcher = NodeRewriter.transformations.keys.map(matcher => {
-      (NodeRewriter.transformations(matcher).head, matcher(nodes)) //multi :/
+    val transformations = getTransformations(ctx)
+    val matchingPerMatcher = transformations.keys.map(matcher => {
+      (transformations(matcher).head, matcher(nodes)) //multi :/
     })
     val successefulMatcher = matchingPerMatcher.find({
       case (rewriter: Rewriter,matching: Option[Match]) => matching.isDefined   //first that matched
@@ -74,14 +75,23 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
     successefulMatcher.map({
       case (rewriter, matching) => {
         val rewritenNodes = rewriter(nodes.take(matching.get.consumed),matching.get)
-        rewrite(rewritenNodes++nodes.drop(matching.get.consumed))                     //TODO!!! retries other matchers on rewritten rule
+        rewrite(rewritenNodes++nodes.drop(matching.get.consumed),ctx)                     //TODO!!! retries other matchers on rewritten rule
       }
     }).getOrElse({
       if(nodes.isEmpty)
         Seq.empty
       else
-        nodes.head+:rewrite(nodes.tail)
+        nodes.head+:rewrite(nodes.tail,ctx)
     }) //recurse down the nodes list, after match and rewrite, rewrite the reminder
+  }
+
+  def getTransformations(ctx: Seq[String]): NodeRewriter.Transformations = {
+    val trans = ctx.lastOption match {
+      case Some("imath") => NodeRewriter.singleMathTrans
+      case Some("math") => NodeRewriter.blockMathTrans
+      case _ => NodeRewriter.transformations
+    }
+    trans
   }
 }
 
@@ -94,7 +104,21 @@ object NodeRewriter {
   type Matcher = Seq[Node] => Option[Match]
   case class Match(consumed: Int, groups: Seq[MatchingGroup])
   type Rewriter = (Seq[Node], Match) => Seq[Node]
+  type Transformations = Map[Matcher,Seq[Rewriter]]
 
+  val singleMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
+    (Matchers.function("cm",0), Seq(Rewriters.simpleReplace(" cm"))),
+    (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" dm"))),
+    (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" m")))
+
+  )
+
+  val blockMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
+    (Matchers.function("cm",0), Seq(Rewriters.simpleReplace(" BMcm"))),
+    (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" BMdm"))),
+    (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" BMm")))
+
+  )
 
   val transformations: Map[Matcher,Seq[Rewriter]] = ListMap(
     (Matchers.ifBlock,              Seq(Rewriters.elseRemoval)),
@@ -282,41 +306,45 @@ object NodeRewriter {
   }
 
 
-  object Rewriters { //input is the only matched part of global input
-    val remove = (in: Input,m: Match) => {
+  object Rewriters {
+    //input is the only matched part of global input
+    val remove = (in: Input, m: Match) => {
       Seq.empty
     }
-    val elseRemoval = (in: Input,m: Match) => {
+    val elseRemoval = (in: Input, m: Match) => {
       m.groups.head
-    }   //take only elements nested under if clause
-    val boldBlock = (in: Input,m: Match) => { //type guaranteed by matcher
-      val node = in.head.asInstanceOf[Func]
-      TextNode("<bold>")+:node.funcArg.head.value:+TextNode("</bold>"+node.funcArg.head.tail)
     }
-    val italicBlock = (in: Input,m: Match) => {//type guaranteed by matcher
+    //take only elements nested under if clause
+    val boldBlock = (in: Input, m: Match) => {
+      //type guaranteed by matcher
       val node = in.head.asInstanceOf[Func]
-      TextNode("<it>")+:node.funcArg.head.value:+TextNode("</it>"+node.funcArg.head.tail)
+      TextNode("<bold>") +: node.funcArg.head.value :+ TextNode("</bold>" + node.funcArg.head.tail)
+    }
+    val italicBlock = (in: Input, m: Match) => {
+      //type guaranteed by matcher
+      val node = in.head.asInstanceOf[Func]
+      TextNode("<it>") +: node.funcArg.head.value :+ TextNode("</it>" + node.funcArg.head.tail)
     }
     val innerBlock = (blockName: String) =>
-      (in: Input,m: Match) => {
+      (in: Input, m: Match) => {
         val inHead = in.head.asInstanceOf[FuncArg]
         val tail = inHead.value.tail
-        val res = TextNode(s"<$blockName>")+:tail:+TextNode(s"</$blockName>"+inHead.tail)
+        val res = TextNode(s"<$blockName>") +: tail :+ TextNode(s"</$blockName>" + inHead.tail)
         res
       }
-    val commentedSlika = (in: Input,m: Match) => in
+    val commentedSlika = (in: Input, m: Match) => in
     val funcItalicBlock = (in: Input, m: Match) => {
       val fIn = in.head.asInstanceOf[Func]
       val lastFArg = fIn.funcArg.last
-      Seq(Func(fIn.name,fIn.bArgs,fIn.funcArg.seq.dropRight(1)),FuncArg(lastFArg.value,lastFArg.tail))
+      Seq(Func(fIn.name, fIn.bArgs, fIn.funcArg.seq.dropRight(1)), FuncArg(lastFArg.value, lastFArg.tail))
     }
     val toBeginEndBlock = (tag: String) =>
-     (in: Input, m: Match) => {
-      val bIn = in.head.asInstanceOf[BlockFunc]
-      val opent = Func("begin",Seq.empty,Seq(FuncArg(Seq(TextNode(tag)),"")))
-      val closet = Func("end",Seq.empty,Seq(FuncArg(Seq(TextNode(tag)),"")))
-      Seq(BlockFunc(tag,opent,closet,bIn.nested))
-    }
+      (in: Input, m: Match) => {
+        val bIn = in.head.asInstanceOf[BlockFunc]
+        val opent = Func("begin", Seq.empty, Seq(FuncArg(Seq(TextNode(tag)), "")))
+        val closet = Func("end", Seq.empty, Seq(FuncArg(Seq(TextNode(tag)), "")))
+        Seq(BlockFunc(tag, opent, closet, bIn.nested))
+      }
     val flattenBlock = (in: Input, m: Match) => {
       val bIn = in.head.asInstanceOf[BlockFunc]
       bIn.nested
@@ -326,8 +354,12 @@ object NodeRewriter {
       fIn.funcArg.head.value
     }
     val flattenInner = (in: Input, m: Match) => {
-      m.groups.head:+TextNode(in.head.asInstanceOf[FuncArg].tail)
+      m.groups.head :+ TextNode(in.head.asInstanceOf[FuncArg].tail)
     }
+    val simpleReplace = (replaceTo: String) =>
+      (in: Input, m: Match) => {
+        Seq(TextNode(replaceTo))
+      }
     val genFun = (funName: String, fArgs: Seq[String]) =>
       (in: Input, m: Match) => {
         val args1= FuncArg(Seq(TextNode(fArgs.head)), "")

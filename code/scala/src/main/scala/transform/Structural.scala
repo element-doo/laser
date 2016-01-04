@@ -142,7 +142,7 @@ object Structural {
           "{" + print(children) + "}" + tail
         }
         case BlockMath(values) => "$$" + print(values) + "$$"
-        case InlineMath(value) => "$" + value + "$"
+        case InlineMath(values) => "$" + print(values) + "$"
         case RawText(value) => value
         case Document(values) => print(values)
       }

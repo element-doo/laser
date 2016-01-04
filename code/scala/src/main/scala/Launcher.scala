@@ -60,7 +60,10 @@ object BlehLauncher {
 
   def main (args: Array[String]){
     val input = //"""{\it dsfsds erw  gdf}""".stripMargin  //radi
-    """{\it dsfsds erw ss\/}""".stripMargin  //ne radi
+    """$$pero \cm asd \dm \m asdasd$$
+      |$pero \cm asd \dm \m asdasd$
+      |pero \cm asd \dm \m asdasd
+    """.stripMargin  //ne radi
     //"""{\it dsfsds}""".stripMargin   //radi
     //println(TParser.parse(input))
     println(new RuleService().transformTree(input,"").toString)
