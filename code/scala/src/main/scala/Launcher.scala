@@ -59,17 +59,11 @@ object StaticLauncher {
 object BlehLauncher {
 
   def main (args: Array[String]){
-    val input =
-      """Evo svih prostih brojeva koji su manji od 100:
-        |       $$
-        |       %\gather
-        |       2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
-        |       43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, \rlap{97}
-        |       %\endgather
-        |       $$
-        |       Nastavi ovaj niz ispisujuchi sve proste brojeve manje od 200.
-        |       SSto misliss,""".stripMargin
-    println(TParser.parse(input))
+    val input = //"""{\it dsfsds erw  gdf}""".stripMargin  //radi
+    """{\it dsfsds erw ss\/}""".stripMargin  //ne radi
+    //"""{\it dsfsds}""".stripMargin   //radi
+    //println(TParser.parse(input))
+    println(new RuleService().transformTree(input,"").toString)
   }
 }
 

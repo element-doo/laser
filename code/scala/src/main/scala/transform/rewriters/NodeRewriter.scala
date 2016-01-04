@@ -5,6 +5,8 @@ import parsers.TParser._
 import services.Rule
 import transform.rewriters.NodeRewriter.{Rewriter, Match}
 
+import scala.collection.immutable.ListMap
+
 
 /*trait NodeRewriter[R>:Node,T>:Node]{
 
@@ -93,7 +95,8 @@ object NodeRewriter {
   case class Match(consumed: Int, groups: Seq[MatchingGroup])
   type Rewriter = (Seq[Node], Match) => Seq[Node]
 
-  val transformations: Map[Matcher,Seq[Rewriter]] = Map(
+
+  val transformations: Map[Matcher,Seq[Rewriter]] = ListMap(
     (Matchers.ifBlock,              Seq(Rewriters.elseRemoval)),
     (Matchers.function("df",1),       Seq(Rewriters.boldBlock)),
     (Matchers.function("it",1),       Seq(Rewriters.italicBlock)),
@@ -287,14 +290,19 @@ object NodeRewriter {
       m.groups.head
     }   //take only elements nested under if clause
     val boldBlock = (in: Input,m: Match) => { //type guaranteed by matcher
-      TextNode("<bold>")+:in.head.asInstanceOf[Func].funcArg.head.value:+TextNode("</bold>")
+      val node = in.head.asInstanceOf[Func]
+      TextNode("<bold>")+:node.funcArg.head.value:+TextNode("</bold>"+node.funcArg.head.tail)
     }
     val italicBlock = (in: Input,m: Match) => {//type guaranteed by matcher
-      TextNode("<it>")+:in.head.asInstanceOf[Func].funcArg.head.value:+TextNode("</it>")
+      val node = in.head.asInstanceOf[Func]
+      TextNode("<it>")+:node.funcArg.head.value:+TextNode("</it>"+node.funcArg.head.tail)
     }
     val innerBlock = (blockName: String) =>
       (in: Input,m: Match) => {
-        TextNode(s"<$blockName>")+:in.head.asInstanceOf[FuncArg].value.tail:+TextNode(s"</$blockName>")
+        val inHead = in.head.asInstanceOf[FuncArg]
+        val tail = inHead.value.tail
+        val res = TextNode(s"<$blockName>")+:tail:+TextNode(s"</$blockName>"+inHead.tail)
+        res
       }
     val commentedSlika = (in: Input,m: Match) => in
     val funcItalicBlock = (in: Input, m: Match) => {

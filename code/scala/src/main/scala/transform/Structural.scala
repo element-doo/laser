@@ -1,5 +1,6 @@
 package transform
 
+import com.fasterxml.jackson.databind.node.TextNode
 import parsers.RuleParser.Transformer
 import parsers.TParser
 import parsers.TParser.{InlineMath, BlockMath, Document, BlockFunc}
@@ -59,7 +60,7 @@ object Structural {
 
 
   private def process(rawNodes: Seq[RawNode]): Seq[RawNode] = {
-    rawNodes.seq match {
+    val processed = rawNodes.seq match {
       case head+:tail => {
         val closingTag = closeTag(head)
         val lookAheadIndex = closingTag match {
@@ -87,8 +88,24 @@ object Structural {
       }
       case Nil => Nil
     }
+    //mergeTextNodes(processed)
+    processed
   }
-
+/*
+  private def mergeTextNodes(nodes: Seq[RawNode]): Seq[RawNode] = {
+    nodes match {
+      case RawText(txt)::tail => {
+        val transformedTail = mergeTextNodes(tail)
+        transformedTail.headOption match {
+          case Some(RawText(innerTxt)) => RawText(txt+innerTxt)+:transformedTail.drop(1)
+          case _ => transformedTail
+        }
+      }
+      case anyNode::tail => anyNode+:mergeTextNodes(tail)
+      case _ => Seq()
+    }
+  }
+*/
   private def processSingle(node: RawNode): RawNode = {
     node match {
       case RawBArg(nested,tail)            => RawBArg(process(nested),tail)
