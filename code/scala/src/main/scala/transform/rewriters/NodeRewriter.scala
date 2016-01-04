@@ -107,17 +107,19 @@ object NodeRewriter {
   type Transformations = Map[Matcher,Seq[Rewriter]]
 
   val singleMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
-    (Matchers.function("cm",0), Seq(Rewriters.simpleReplace(" cm"))),
-    (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" dm"))),
-    (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" m")))
-
+    (Matchers.functionPrefix("cm"), Seq(Rewriters.inlineMathUnit("cm"))),
+    (Matchers.functionPrefix("dm"), Seq(Rewriters.inlineMathUnit("dm"))),
+    (Matchers.functionPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
+    (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
+    (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%")))
   )
 
   val blockMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
-    (Matchers.function("cm",0), Seq(Rewriters.simpleReplace(" BMcm"))),
-    (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" BMdm"))),
-    (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" BMm")))
-
+    (Matchers.functionPrefix("cm"), Seq(Rewriters.inlineMathUnit("cm"))),
+    (Matchers.functionPrefix("dm"), Seq(Rewriters.inlineMathUnit("dm"))),
+    (Matchers.functionPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
+    (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
+    (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%")))
   )
 
   val transformations: Map[Matcher,Seq[Rewriter]] = ListMap(
@@ -193,7 +195,10 @@ object NodeRewriter {
     (Matchers.functionPrefix("vglue"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("vskip"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("hskip"),Seq(Rewriters.remove)),
-    (Matchers.funcArg,Seq(Rewriters.flattenInner))
+    (Matchers.funcArg,Seq(Rewriters.flattenInner)),
+    (Matchers.function("cm",0), Seq(Rewriters.simpleReplace(" cm"))),
+    (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" dm"))),
+    (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" m")))
 
   )
 
@@ -303,6 +308,7 @@ object NodeRewriter {
         case _ => None
       }
     }
+
   }
 
 
@@ -360,11 +366,22 @@ object NodeRewriter {
       (in: Input, m: Match) => {
         Seq(TextNode(replaceTo))
       }
+    val simpleReplacePrefix = (prefix: String, replaceTo: String) =>
+      (in: Input, m: Match) => in head match {
+        case Func(name,_,_) => Seq(TextNode(replaceTo+name.drop(prefix.length)))
+      }
     val genFun = (funName: String, fArgs: Seq[String]) =>
       (in: Input, m: Match) => {
         val args1= FuncArg(Seq(TextNode(fArgs.head)), "")
         val args2= FuncArg(Seq(TextNode(fArgs.tail.head)), "")
         Seq(Func(funName,Seq.empty,Seq(args1,args2)))
+      }
+    val inlineMathUnit = (tag: String) =>
+      (in: Input, m: Match) => in.head match {
+        case Func(name,_,_) => {
+          val newTag = name.drop(tag.length) //\\text\{ cm\}$1
+          Seq(TextNode(s"\\text{$tag}$newTag"))
+        }
       }
   }
 

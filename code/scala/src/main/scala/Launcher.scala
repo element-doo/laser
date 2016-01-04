@@ -44,7 +44,6 @@ object Launcher {
   }
 }
 
-
 object StaticLauncher {
 
   def main (args: Array[String]){
@@ -60,9 +59,7 @@ object BlehLauncher {
 
   def main (args: Array[String]){
     val input = //"""{\it dsfsds erw  gdf}""".stripMargin  //radi
-    """$$pero \cm asd \dm \m asdasd$$
-      |$pero \cm asd \dm \m asdasd$
-      |pero \cm asd \dm \m asdasd
+    """$$disi \% dasd$$
     """.stripMargin  //ne radi
     //"""{\it dsfsds}""".stripMargin   //radi
     //println(TParser.parse(input))
