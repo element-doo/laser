@@ -111,6 +111,8 @@ object NodeRewriter {
     (Matchers.functionPrefix("dm"), Seq(Rewriters.inlineMathUnit("dm"))),
     (Matchers.functionPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
+    (Matchers.functionPrefix("tz"), Seq(Rewriters.simpleReplacePrefix("tz","."))),
+    (Matchers.functionPrefix("cdot"), Seq(Rewriters.simpleReplacePrefix("cdot","."))),
     (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%")))
   )
 
@@ -119,6 +121,8 @@ object NodeRewriter {
     (Matchers.functionPrefix("dm"), Seq(Rewriters.inlineMathUnit("dm"))),
     (Matchers.functionPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
+    (Matchers.functionPrefix("tz"), Seq(Rewriters.simpleReplacePrefix("tz","."))),
+    (Matchers.functionPrefix("cdot"), Seq(Rewriters.simpleReplacePrefix("cdot","."))),
     (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%")))
   )
 
@@ -130,9 +134,9 @@ object NodeRewriter {
     (Matchers.function("smallskip",0),Seq(Rewriters.remove)),
     (Matchers.function("bigskip",0),  Seq(Rewriters.remove)),
     (Matchers.innerFunctionPrefix("it"),    Seq(Rewriters.innerBlock("it"))),
-
+    (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
     (Matchers.funcItalicBlock,  Seq(Rewriters.funcItalicBlock)),
-
+    (Matchers.functionPrefix("tz"),       Seq(Rewriters.simpleReplacePrefix("tz","."))),
     (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align"))),
     (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather"))),
     (Matchers.blockFunction("aligned"),  Seq(Rewriters.toBeginEndBlock("align"))),
@@ -378,9 +382,9 @@ object NodeRewriter {
       }
     val inlineMathUnit = (tag: String) =>
       (in: Input, m: Match) => in.head match {
-        case Func(name,_,_) => {
+        case Func(name,fargs,bargs) => {
           val newTag = name.drop(tag.length) //\\text\{ cm\}$1
-          Seq(TextNode(s"\\text{$tag}$newTag"))
+          Seq(TextNode(s"\\text{ $tag}$newTag"))++fargs++bargs
         }
       }
   }
