@@ -113,7 +113,8 @@ object NodeRewriter {
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
     (Matchers.functionPrefix("tz"), Seq(Rewriters.simpleReplacePrefix("tz","."))),
     (Matchers.functionPrefix("cdot"), Seq(Rewriters.simpleReplacePrefix("cdot","."))),
-    (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%")))
+    (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%"))),
+    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">")))
   )
 
   val blockMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
@@ -123,7 +124,8 @@ object NodeRewriter {
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
     (Matchers.functionPrefix("tz"), Seq(Rewriters.simpleReplacePrefix("tz","."))),
     (Matchers.functionPrefix("cdot"), Seq(Rewriters.simpleReplacePrefix("cdot","."))),
-    (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%")))
+    (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%"))),
+    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">")))
   )
 
   val transformations: Map[Matcher,Seq[Rewriter]] = ListMap(
@@ -202,7 +204,8 @@ object NodeRewriter {
     (Matchers.funcArg,Seq(Rewriters.flattenInner)),
     (Matchers.function("cm",0), Seq(Rewriters.simpleReplace(" cm"))),
     (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" dm"))),
-    (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" m")))
+    (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" m"))),
+    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">")))
 
   )
 
@@ -385,6 +388,13 @@ object NodeRewriter {
         case Func(name,fargs,bargs) => {
           val newTag = name.drop(tag.length) //\\text\{ cm\}$1
           Seq(TextNode(s"\\text{ $tag}$newTag"))++fargs++bargs
+        }
+      }
+    val removePrefix = (tag: String) =>
+      (in: Input, m: Match) => in.head match {
+        case Func(name,fargs,bargs) => {
+          val newTag = name.drop(tag.length) //\\text\{ cm\}$1
+          Seq(TextNode(newTag))++fargs++bargs
         }
       }
   }
