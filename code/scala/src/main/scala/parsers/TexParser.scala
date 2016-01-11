@@ -4,6 +4,7 @@ import org.parboiled2._
 import org.parboiled2.CharPredicate._
 import parsers.TParser.Node
 
+import scala.collection.mutable
 import scala.util.Try
 
 object TParser {
@@ -24,15 +25,25 @@ object TParser {
 
   //TODO must signal whether the entire input has been consumed, shoud fail if doesnt parse EOI
 
+  object counter {
+    var c = 1
+  }
+
   class SimpleTexParser(val input: ParserInput) extends Parser {
     //def mathNodeRule = rule { "$$" ~ capture(zeroOrMore(!"$$" ~ ANY)) ~ "$$" ~> MathNode }
 
+    var fun = 0
+
     def nodeRule: Rule1[Seq[Node]] = rule {
+      oneOrMore(functionRule | blockArgument | argumentRule | rawNodeRule )
+    }
+
+    def allNodes: Rule1[Seq[Node]] = rule {
       oneOrMore(functionRule | blockArgument | argumentRule | mathNodeRule | rawNodeRule )
     }
 
     def functionRule = rule {
-      "\\" ~ capture(optional(functionNameRule)) ~ zeroOrMore(argumentRule) ~ zeroOrMore(blockArgument) ~> ((name:String,arg:Seq[BlockArg],fa:Seq[FuncArg])=> Func(name,arg,fa))
+       "\\" ~ capture(optional(functionNameRule)) ~ zeroOrMore(argumentRule) ~ zeroOrMore(blockArgument) ~> ((name:String,arg:Seq[BlockArg],fa:Seq[FuncArg])=> Func(name,arg,fa))
     }
 
     def functionNameRule = rule {
@@ -40,11 +51,11 @@ object TParser {
     }
 
     def argumentRule = rule {
-      "[" ~ optional(nodeRule) ~ "]" ~ capture(nts) ~> ((value:Option[Seq[Node]],tail:String) => BlockArg(value.getOrElse(Seq.empty), tail))
+      "[" ~ optional(allNodes) ~ "]" ~ capture(nts) ~> ((value:Option[Seq[Node]],tail:String) => BlockArg(value.getOrElse(Seq.empty), tail))
     }
 
     def blockArgument = rule {
-      "{" ~ optional(nodeRule) ~ "}" ~ capture(nts) ~>  ((value:Option[Seq[Node]], tail:String) => FuncArg(value.getOrElse(Seq.empty), tail))
+      "{" ~ optional(allNodes) ~ "}" ~ capture(nts) ~>  ((value:Option[Seq[Node]], tail:String) => FuncArg(value.getOrElse(Seq.empty), tail))
     }
 
     def rawNodeRule = rule {
@@ -67,19 +78,21 @@ object TParser {
       zeroOrMore( newLine | " " | "\t")
     }
 
-
     def newLine = rule { "\r\n" | "\r" | "\n" }
 
     def documentRule = rule {
-      nodeRule ~> Document
+      allNodes ~> Document
     }
+
+
   }
 
   def parse(doc: String): Try[Document]= {
     val cleaned = doc.replaceAll("""\\([Ss])lika(\w+)?\s?(<\w*>)?\s?([\w\-]+)?\[""","\\\\$1lika$2$3$4[")
                      .replaceAll("""\\([hv])box\s?to\s?(\w+)?\s?\{""","\\\\$1boxto$2{")
                      .replaceAll("""(?<!\\)%.*(\n|%)""","") //strip comments
-    new SimpleTexParser(cleaned).documentRule.run()
+    val parser = new SimpleTexParser(cleaned)
+    parser.documentRule.run()
   }
 }
 
