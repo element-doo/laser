@@ -112,9 +112,11 @@ object NodeRewriter {
     (Matchers.functionPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
     (Matchers.functionPrefix("tz"), Seq(Rewriters.simpleReplacePrefix("tz","."))),
-    (Matchers.functionPrefix("cdot"), Seq(Rewriters.simpleReplacePrefix("cdot","."))),
+    (Matchers.functionPrefix("."), Seq(Rewriters.simpleReplacePrefix(".","\\cdot"))),
     (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%"))),
-    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">")))
+    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">"))),
+    (Matchers.blockFunction("aligned"),  Seq(Rewriters.toBeginEndBlock("align"))),
+    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align")))
   )
 
   val blockMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
@@ -123,9 +125,11 @@ object NodeRewriter {
     (Matchers.functionPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
     (Matchers.functionPrefix("tz"), Seq(Rewriters.simpleReplacePrefix("tz","."))),
-    (Matchers.functionPrefix("cdot"), Seq(Rewriters.simpleReplacePrefix("cdot","."))),
+    (Matchers.functionPrefix("."), Seq(Rewriters.simpleReplacePrefix(".","\\cdot"))),
     (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%"))),
-    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">")))
+    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">"))),
+    (Matchers.blockFunction("aligned"),  Seq(Rewriters.toBeginEndBlock("align"))),
+    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align")))
   )
 
   val transformations: Map[Matcher,Seq[Rewriter]] = ListMap(
