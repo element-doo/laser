@@ -140,12 +140,16 @@ object NodeRewriter {
     (Matchers.function("smallskip",0),Seq(Rewriters.remove)),
     (Matchers.function("bigskip",0),  Seq(Rewriters.remove)),
     (Matchers.innerFunctionPrefix("it"),    Seq(Rewriters.innerBlock("it"))),
+    (Matchers.innerFunctionPrefix("tt"),    Seq(Rewriters.innerBlock("tt"))),
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
     (Matchers.funcItalicBlock,  Seq(Rewriters.funcItalicBlock)),
     (Matchers.functionPrefix("tz"),       Seq(Rewriters.simpleReplacePrefix("tz","."))),
     (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align"))),
     (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather"))),
     (Matchers.blockFunction("aligned"),  Seq(Rewriters.toBeginEndBlock("align"))),
+
+    (Matchers.function("v",1), Seq(Rewriters.diacritic)),
+    (Matchers.function("'",1), Seq(Rewriters.cDiacritics)),
 
     (Matchers.function("break",0), Seq(Rewriters.remove)),
     (Matchers.function("newpage",0),Seq(Rewriters.remove)),
@@ -279,7 +283,10 @@ object NodeRewriter {
       (input: Seq[Node]) =>  input match {
         case FuncArg(values,trailing)+:tail if values.nonEmpty => {
           values.head match {
-            case Func(fName,Seq(),Seq()) if fName.startsWith(name) => Some(Match(1,Seq(values.tail)))  //stripaj zadnji dio italic string \/
+            case Func(fName,Seq(),Seq()) if fName.startsWith(name) => {
+              println("matched "+values.tail)
+              Some(Match(1,Seq(values.tail)))
+            }  //stripaj zadnji dio italic string \/
             case _ => None
           }
         }
@@ -347,6 +354,7 @@ object NodeRewriter {
         val inHead = in.head.asInstanceOf[FuncArg]
         val tail = inHead.value.tail
         val res = TextNode(s"<$blockName>") +: tail :+ TextNode(s"</$blockName>" + inHead.tail)
+        println(res)
         res
       }
     val commentedSlika = (in: Input, m: Match) => in
@@ -401,6 +409,28 @@ object NodeRewriter {
           Seq(TextNode(newTag))++fargs++bargs
         }
       }
+    val diacritic = (in: Input, m: Match) => {
+      val fIn = in.head.asInstanceOf[Func]
+      val oldVal = fIn.funcArg.head.value
+      val newVal = oldVal.head.asInstanceOf[TextNode].value match {
+        case "s" => "š"
+        case "S" => "Š"
+        case "c" => "č"
+        case "C" => "Č"
+        case "z" => "ž"
+        case "Z" => "Ž"
+      }
+      Seq(TextNode(newVal))
+    }
+    val cDiacritics = (in: Input, m: Match) => {
+      val fIn = in.head.asInstanceOf[Func]
+      val oldVal = fIn.funcArg.head.value
+      val newVal = oldVal.head.asInstanceOf[TextNode].value match {
+        case "c" => "ć"
+        case "C" => "Ć"
+      }
+      Seq(TextNode(newVal))
+    }
   }
 
 

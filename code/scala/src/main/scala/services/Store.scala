@@ -12,6 +12,7 @@ object Store {
     path.outputStream(StandardOpenOption.Write).write(rules)
     rules
   }
+
   def readRules: Try[String] = Try {
     path.inputStream.string
   }
