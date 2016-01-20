@@ -108,8 +108,11 @@ object NodeRewriter {
 
   val singleMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
     (Matchers.functionPrefix("cm"), Seq(Rewriters.inlineMathUnit("cm"))),
-    (Matchers.functionPrefix("dm"), Seq(Rewriters.inlineMathUnit("dm"))),
-    (Matchers.functionPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
+    (Matchers.functionAlphaPrefix("dm"), Seq(Rewriters.inlineMathUnit("dm"))),
+    (Matchers.functionAlphaPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
+    (Matchers.functionAlphaPrefix("kg"), Seq(Rewriters.inlineMathUnit("kg"))),
+    (Matchers.functionAlphaPrefix("km"), Seq(Rewriters.inlineMathUnit("km"))),
+
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
     (Matchers.functionPrefix("tz"), Seq(Rewriters.simpleReplacePrefix("tz","."))),
     (Matchers.functionPrefix("."), Seq(Rewriters.simpleReplacePrefix(".","\\cdot"))),
@@ -120,9 +123,12 @@ object NodeRewriter {
   )
 
   val blockMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
-    (Matchers.functionPrefix("cm"), Seq(Rewriters.inlineMathUnit("cm"))),
-    (Matchers.functionPrefix("dm"), Seq(Rewriters.inlineMathUnit("dm"))),
-    (Matchers.functionPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
+    (Matchers.functionAlphaPrefix("cm"), Seq(Rewriters.inlineMathUnit("cm"))),
+    (Matchers.functionAlphaPrefix("dm"), Seq(Rewriters.inlineMathUnit("dm"))),
+    (Matchers.functionAlphaPrefix("m"), Seq(Rewriters.inlineMathUnit("m"))),
+    (Matchers.functionAlphaPrefix("kg"), Seq(Rewriters.inlineMathUnit("kg"))),
+    (Matchers.functionAlphaPrefix("km"), Seq(Rewriters.inlineMathUnit("km"))),
+
     (Matchers.functionPrefix(","), Seq(Rewriters.simpleReplacePrefix(",","&#8202;"))),
     (Matchers.functionPrefix("tz"), Seq(Rewriters.simpleReplacePrefix("tz","."))),
     (Matchers.functionPrefix("."), Seq(Rewriters.simpleReplacePrefix(".","\\cdot"))),
@@ -242,6 +248,14 @@ object NodeRewriter {
     def functionPrefix(name:String): Matcher =
       (input: Seq[Node]) =>  input match {
         case Func(fName,_,fArgs)+:tail if fName.startsWith(name) => {
+          Some(Match(1,Seq.empty))
+        }
+        case _ => None
+      }
+
+    def functionAlphaPrefix(name:String): Matcher =
+      (input: Seq[Node]) =>  input match {
+        case Func(fName,_,fArgs)+:tail if fName.startsWith(name) && !fName.charAt(name.length).isLetter => {
           Some(Match(1,Seq.empty))
         }
         case _ => None
@@ -420,7 +434,7 @@ object NodeRewriter {
         case "z" => "ž"
         case "Z" => "Ž"
       }
-      Seq(TextNode(newVal))
+      Seq(TextNode(newVal), TextNode(fIn.funcArg.head.tail))
     }
     val cDiacritics = (in: Input, m: Match) => {
       val fIn = in.head.asInstanceOf[Func]
@@ -429,7 +443,7 @@ object NodeRewriter {
         case "c" => "ć"
         case "C" => "Ć"
       }
-      Seq(TextNode(newVal))
+      Seq(TextNode(newVal), TextNode(fIn.funcArg.head.tail))
     }
   }
 
