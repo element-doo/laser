@@ -72,10 +72,13 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
     val successefulMatcher = matchingPerMatcher.find({
       case (rewriter: Rewriter,matching: Option[Match]) => matching.isDefined   //first that matched
     })
+    println("matched with "+successefulMatcher)
     successefulMatcher.map({
       case (rewriter, matching) => {
+        println("calling rewriter "+rewriter)
         val rewritenNodes = rewriter(nodes.take(matching.get.consumed),matching.get)
-        rewrite(rewritenNodes++nodes.drop(matching.get.consumed),ctx)                     //TODO!!! retries other matchers on rewritten rule
+        //rewrite(rewritenNodes++nodes.drop(matching.get.consumed),ctx)                     //TODO!!! retries other matchers on rewritten rule
+        rewritenNodes++rewrite(nodes.drop(matching.get.consumed),ctx)
       }
     }).getOrElse({
       if(nodes.isEmpty)
@@ -365,6 +368,7 @@ object NodeRewriter {
     }
     val innerBlock = (blockName: String) =>
       (in: Input, m: Match) => {
+        println("inner block")
         val inHead = in.head.asInstanceOf[FuncArg]
         val tail = inHead.value.tail
         val res = TextNode(s"<$blockName>") +: tail :+ TextNode(s"</$blockName>" + inHead.tail)

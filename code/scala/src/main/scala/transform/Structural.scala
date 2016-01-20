@@ -1,11 +1,9 @@
 package transform
 
-import com.fasterxml.jackson.databind.node.TextNode
-import parsers.RuleParser.Transformer
 import parsers.TParser
 import parsers.TParser.{InlineMath, BlockMath, Document, BlockFunc}
 import services.Rule
-import transform.rewriters.{Descender, NodeRewriter}
+import transform.rewriters.{Descender}
 
 object Structural {
   import TParser.{Node => RawNode, Func => RawFunc, TextNode => RawText, FuncArg => RawFArg, BlockArg => RawBArg, MathNode => RawMath }
@@ -17,6 +15,7 @@ object Structural {
     println("Started")
     val pTree = TParser.parse(originalText).get
     val total = System.currentTimeMillis()-start
+    println("=========================================")
     println("total: "+total)
     val processed = process(pTree.nodes)
     val document = Document(processed)
