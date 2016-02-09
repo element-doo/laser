@@ -136,8 +136,6 @@ object NodeRewriter {
     (Matchers.functionAlphaPrefixOrAlone("br"), Seq(Rewriters.simpleReplacePrefix("br","right"))),
     (Matchers.functionAlphaPrefixOrAlone("ds"), Seq(Rewriters.removePrefix("ds"))),
 
-    (Matchers.blockFunction("cases"),  Seq(Rewriters.toBeginEndBlock("cases"))),
-    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather"))),
 
     (Matchers.functionPrefix("dots"), Seq(Rewriters.simpleReplacePrefix("dots","\\ldots"))),
 
@@ -173,8 +171,6 @@ object NodeRewriter {
     (Matchers.functionAlphaPrefixOrAlone("br"), Seq(Rewriters.simpleReplacePrefix("br","right"))),
     (Matchers.functionAlphaPrefixOrAlone("ds"), Seq(Rewriters.removePrefix("ds"))),
 
-    (Matchers.blockFunction("cases"),  Seq(Rewriters.toBeginEndBlock("cases"))),
-    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather"))),
 
     (Matchers.functionPrefix("dots"), Seq(Rewriters.simpleReplacePrefix("dots","\\ldots"))),
 
@@ -278,7 +274,11 @@ object NodeRewriter {
     (Matchers.functionAlphaPrefixOrAlone("qq"), Seq(Rewriters.simpleReplacePrefix("qq"," "))),
     (Matchers.functionAlphaPrefixOrAlone("q"), Seq(Rewriters.simpleReplacePrefix("q"," "))),
 
-    (Matchers.functionPrefix("allowdisplaybreak"), Seq(Rewriters.removePrefix("allowdisplaybreak")))
+    (Matchers.functionPrefix("allowdisplaybreak"), Seq(Rewriters.removePrefix("allowdisplaybreak"))),
+
+
+    (Matchers.blockFunction("cases"),  Seq(Rewriters.toBeginEndBlock("cases"))),
+    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather")))
 
   )
 
