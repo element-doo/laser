@@ -158,7 +158,7 @@ object NodeRewriter {
     (Matchers.blockFunction("aligned"),  Seq(Rewriters.toBeginEndBlock("align"))),
     (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align"))),
 
-  
+
     (Matchers.functionAlphaPrefixOrAlone("bf"), Seq(Rewriters.removePrefix("bf"))),
     (Matchers.functionAlphaPrefixOrAlone("Udva"), Seq(Rewriters.removePrefix("Udva"))),
     (Matchers.functionAlphaPrefixOrAlone("BA"), Seq(Rewriters.removePrefix("BA"))),
@@ -255,7 +255,13 @@ object NodeRewriter {
     (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" dm"))),
     (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" m"))),
     (Matchers.functionAlphaPrefix("km"), Seq(Rewriters.inlineMathUnit("km"))),
-    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">")))
+    (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">"))),
+
+
+    (Matchers.functionPrefix("relax"), Seq(Rewriters.simpleReplacePrefix("relax",""))),
+    (Matchers.functionPrefix("llap"), Seq(Rewriters.simpleReplacePrefix("llap",""))),
+    (Matchers.functionPrefix("rlap"), Seq(Rewriters.simpleReplacePrefix("rlap",""))),
+    (Matchers.functionPrefix("km"), Seq(Rewriters.simpleReplacePrefix("km","&#8201;km")))
 
   )
 
