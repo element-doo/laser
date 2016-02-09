@@ -222,6 +222,7 @@ object NodeRewriter {
     (Matchers.function("cm",0), Seq(Rewriters.simpleReplace(" cm"))),
     (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" dm"))),
     (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" m"))),
+    (Matchers.functionAlphaPrefix("km"), Seq(Rewriters.inlineMathUnit("km"))),
     (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">")))
 
   )
