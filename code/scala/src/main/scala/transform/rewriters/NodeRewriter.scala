@@ -278,7 +278,14 @@ object NodeRewriter {
 
 
     (Matchers.blockFunction("cases"),  Seq(Rewriters.toBeginEndBlock("cases"))),
-    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather")))
+    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather"))),
+
+
+    (Matchers.functionIgnoreCase("ujedan",0),Seq(Rewriters.remove)),
+    (Matchers.functionIgnoreCase("udva",0),Seq(Rewriters.remove)),
+    (Matchers.functionIgnoreCase("utri",0),Seq(Rewriters.remove)),
+    (Matchers.functionIgnoreCase("ucetiri",0),Seq(Rewriters.remove)),
+    (Matchers.functionIgnoreCase("upet",0),Seq(Rewriters.remove))
 
   )
 
@@ -330,6 +337,13 @@ object NodeRewriter {
     def function(name:String, fArgsLen: Int): Matcher =
       (input: Seq[Node]) =>  input match {
         case Func(fName,_,fArgs)+:tail if fName == name && fArgs.size == fArgsLen => {
+          Some(Match(1,Seq.empty))
+        }
+        case _ => None
+      }
+    def functionIgnoreCase(name:String, fArgsLen: Int): Matcher =
+      (input: Seq[Node]) =>  input match {
+        case Func(fName,_,fArgs)+:tail if fName.equalsIgnoreCase(name) && fArgs.size == fArgsLen => {
           Some(Match(1,Seq.empty))
         }
         case _ => None
