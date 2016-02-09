@@ -276,7 +276,9 @@ object NodeRewriter {
     (Matchers.functionPrefix("dots"), Seq(Rewriters.simpleReplacePrefix("dots","$\\ldots$"))),
 
     (Matchers.functionAlphaPrefixOrAlone("qq"), Seq(Rewriters.simpleReplacePrefix("qq"," "))),
-    (Matchers.functionAlphaPrefixOrAlone("q"), Seq(Rewriters.simpleReplacePrefix("q"," ")))
+    (Matchers.functionAlphaPrefixOrAlone("q"), Seq(Rewriters.simpleReplacePrefix("q"," "))),
+
+    (Matchers.functionPrefix("allowdisplaybreak"), Seq(Rewriters.removePrefix("allowdisplaybreak")))
 
   )
 
