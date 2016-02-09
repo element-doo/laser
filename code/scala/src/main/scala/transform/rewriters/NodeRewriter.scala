@@ -122,7 +122,25 @@ object NodeRewriter {
     (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%"))),
     (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">"))),
     (Matchers.blockFunction("aligned"),  Seq(Rewriters.toBeginEndBlock("align"))),
-    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align")))
+    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align"))),
+
+
+
+    (Matchers.functionAlphaPrefixOrAlone("bf"), Seq(Rewriters.removePrefix("bf"))),
+    (Matchers.functionAlphaPrefixOrAlone("Udva"), Seq(Rewriters.removePrefix("Udva"))),
+    (Matchers.functionAlphaPrefixOrAlone("BA"), Seq(Rewriters.removePrefix("BA"))),
+    (Matchers.functionAlphaPrefixOrAlone("B"), Seq(Rewriters.removePrefix("B"))),
+    (Matchers.functionAlphaPrefixOrAlone("Bl"), Seq(Rewriters.simpleReplacePrefix("Bl","left"))),
+    (Matchers.functionAlphaPrefixOrAlone("Br"), Seq(Rewriters.simpleReplacePrefix("Br","right"))),
+    (Matchers.functionAlphaPrefixOrAlone("bl"), Seq(Rewriters.simpleReplacePrefix("bl","left"))),
+    (Matchers.functionAlphaPrefixOrAlone("br"), Seq(Rewriters.simpleReplacePrefix("br","right"))),
+    (Matchers.functionAlphaPrefixOrAlone("ds"), Seq(Rewriters.removePrefix("ds"))),
+
+    (Matchers.blockFunction("cases"),  Seq(Rewriters.toBeginEndBlock("cases"))),
+    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather")))
+
+
+
   )
 
   val blockMathTrans: Map[Matcher,Seq[Rewriter]] = ListMap(
@@ -138,7 +156,21 @@ object NodeRewriter {
     (Matchers.function("%",0), Seq(Rewriters.simpleReplace("\\\\%"))),
     (Matchers.functionPrefix(">"), Seq(Rewriters.removePrefix(">"))),
     (Matchers.blockFunction("aligned"),  Seq(Rewriters.toBeginEndBlock("align"))),
-    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align")))
+    (Matchers.blockFunction("align"),  Seq(Rewriters.toBeginEndBlock("align"))),
+
+  
+    (Matchers.functionAlphaPrefixOrAlone("bf"), Seq(Rewriters.removePrefix("bf"))),
+    (Matchers.functionAlphaPrefixOrAlone("Udva"), Seq(Rewriters.removePrefix("Udva"))),
+    (Matchers.functionAlphaPrefixOrAlone("BA"), Seq(Rewriters.removePrefix("BA"))),
+    (Matchers.functionAlphaPrefixOrAlone("B"), Seq(Rewriters.removePrefix("B"))),
+    (Matchers.functionAlphaPrefixOrAlone("Bl"), Seq(Rewriters.simpleReplacePrefix("Bl","left"))),
+    (Matchers.functionAlphaPrefixOrAlone("Br"), Seq(Rewriters.simpleReplacePrefix("Br","right"))),
+    (Matchers.functionAlphaPrefixOrAlone("bl"), Seq(Rewriters.simpleReplacePrefix("bl","left"))),
+    (Matchers.functionAlphaPrefixOrAlone("br"), Seq(Rewriters.simpleReplacePrefix("br","right"))),
+    (Matchers.functionAlphaPrefixOrAlone("ds"), Seq(Rewriters.removePrefix("ds"))),
+
+    (Matchers.blockFunction("cases"),  Seq(Rewriters.toBeginEndBlock("cases"))),
+    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather")))
   )
 
   val transformations: Map[Matcher,Seq[Rewriter]] = ListMap(
@@ -265,6 +297,13 @@ object NodeRewriter {
         case _ => None
       }
 
+    def functionAlphaPrefixOrAlone(name:String): Matcher =
+      (input: Seq[Node]) =>  input match {
+        case Func(fName,_,fArgs)+:tail if fName.startsWith(name) && (fName.length==name.length || !fName.charAt(name.length).isLetter) => {
+          Some(Match(1,Seq.empty))
+        }
+        case _ => None
+      }
     def function(name:String, fArgsLen: Int): Matcher =
       (input: Seq[Node]) =>  input match {
         case Func(fName,_,fArgs)+:tail if fName == name && fArgs.size == fArgsLen => {
