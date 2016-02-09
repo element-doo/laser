@@ -137,7 +137,9 @@ object NodeRewriter {
     (Matchers.functionAlphaPrefixOrAlone("ds"), Seq(Rewriters.removePrefix("ds"))),
 
     (Matchers.blockFunction("cases"),  Seq(Rewriters.toBeginEndBlock("cases"))),
-    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather")))
+    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather"))),
+
+    (Matchers.functionPrefix("dots"), Seq(Rewriters.simpleReplacePrefix("dots","\\ldots")))
 
 
 
@@ -170,7 +172,9 @@ object NodeRewriter {
     (Matchers.functionAlphaPrefixOrAlone("ds"), Seq(Rewriters.removePrefix("ds"))),
 
     (Matchers.blockFunction("cases"),  Seq(Rewriters.toBeginEndBlock("cases"))),
-    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather")))
+    (Matchers.blockFunction("gather"),  Seq(Rewriters.toBeginEndBlock("gather"))),
+
+    (Matchers.functionPrefix("dots"), Seq(Rewriters.simpleReplacePrefix("dots","\\ldots")))
   )
 
   val transformations: Map[Matcher,Seq[Rewriter]] = ListMap(
@@ -261,7 +265,10 @@ object NodeRewriter {
     (Matchers.functionPrefix("relax"), Seq(Rewriters.simpleReplacePrefix("relax",""))),
     (Matchers.functionPrefix("llap"), Seq(Rewriters.simpleReplacePrefix("llap",""))),
     (Matchers.functionPrefix("rlap"), Seq(Rewriters.simpleReplacePrefix("rlap",""))),
-    (Matchers.functionPrefix("km"), Seq(Rewriters.simpleReplacePrefix("km","&#8201;km")))
+    (Matchers.functionPrefix("km"), Seq(Rewriters.simpleReplacePrefix("km","&#8201;km"))),
+
+
+    (Matchers.functionPrefix("dots"), Seq(Rewriters.simpleReplacePrefix("dots","$\\ldots$")))
 
   )
 
