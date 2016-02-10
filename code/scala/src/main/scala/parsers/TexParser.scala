@@ -35,6 +35,7 @@ object TParser {
     var fun = 0
 
     def nodeRule: Rule1[Seq[Node]] = rule {
+
       oneOrMore(functionRule | blockArgument | argumentRule | rawNodeRule )
     }
 
@@ -47,7 +48,7 @@ object TParser {
     }
 
     def functionNameRule = rule {
-      oneOrMore(AlphaNum | "_" | "=" | ">" | "<" | "-" | ":" | "^" | "." | "*" | "%" | "," | "'")
+      oneOrMore(AlphaNum | "_" | "=" | ">" | "<" | "-" | ":" | "^" | "." | "*" | "%" | "," | "'" | "&" | "#" | ";")
     }
 
     def argumentRule = rule {

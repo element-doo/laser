@@ -78,7 +78,7 @@ class Descender(textRules: Map[String,Seq[Rule]]) {
         println("calling rewriter "+rewriter)
         val rewritenNodes = rewriter(nodes.take(matching.get.consumed),matching.get)
         //rewrite(rewritenNodes++nodes.drop(matching.get.consumed),ctx)                     //TODO!!! retries other matchers on rewritten rule
-        rewritenNodes++rewrite(nodes.drop(matching.get.consumed),ctx)
+        rewrite(rewritenNodes,ctx)++rewrite(nodes.drop(matching.get.consumed),ctx)
       }
     }).getOrElse({
       if(nodes.isEmpty)
@@ -287,7 +287,22 @@ object NodeRewriter {
     (Matchers.functionIgnoreCase("ucetiri",0),Seq(Rewriters.remove)),
     (Matchers.functionIgnoreCase("upet",0),Seq(Rewriters.remove)),
 
-    (Matchers.functionPrefix(".\\&#8201;"),Seq(Rewriters.simpleReplacePrefix(".\\&#8201;",".&#8201;")))
+    (Matchers.functionPrefix(".\\&#8201;"),Seq(Rewriters.simpleReplacePrefix(".\\&#8201;",".&#8201;"))),
+
+    (Matchers.function("Okvir",1), Seq(Rewriters.okvir)),
+    (Matchers.function("OkvirPrimjer",1), Seq(Rewriters.okvirPrimjer)),
+
+    (Matchers.blockFunctionFargs("primjer"),Seq(Rewriters.flatBlockWrap("<div class=\"blok-primjer-naslov\">Primjer</div>","</div>"))),
+
+    (Matchers.function("Primjertrue",0),Seq(Rewriters.remove)),
+    (Matchers.function("Primjerfalse",0),Seq(Rewriters.remove)),
+
+    (Matchers.blockFunctionFargs("zad"),Seq(Rewriters.flatBlockWrap("<div class=\"blok-zadatak-naslov\">Zadatak</div><div class=\"blok-zadatak-sadrzaj\">","</div>"))),
+
+    (Matchers.function("OkvirKutak",1), Seq(Rewriters.flatFuncWrap("<div class=\"okvir-kutak\">","</div>"))),
+    (Matchers.function("formula",1), Seq(Rewriters.flatFuncWrap("$$","$$")))
+
+
 
   )
 
@@ -343,6 +358,13 @@ object NodeRewriter {
         }
         case _ => None
       }
+    def functionFB(name:String, fArgsLen: Int, bArgsLen: Int): Matcher =
+      (input: Seq[Node]) =>  input match {
+        case Func(fName,bArgs,fArgs)+:tail if fName == name && fArgs.size == fArgsLen && bArgs.length == bArgsLen => {
+          Some(Match(1,Seq.empty))
+        }
+        case _ => None
+      }
     def functionIgnoreCase(name:String, fArgsLen: Int): Matcher =
       (input: Seq[Node]) =>  input match {
         case Func(fName,_,fArgs)+:tail if fName.equalsIgnoreCase(name) && fArgs.size == fArgsLen => {
@@ -353,6 +375,13 @@ object NodeRewriter {
     def blockFunction(tag: String): Matcher =
       (input: Seq[Node]) =>  input match {
         case BlockFunc(tagVal,open,close,nested)+:tail if tagVal == tag && open.asInstanceOf[Func].funcArg.isEmpty => {
+          Some(Match(1,Seq(nested)))
+        }
+        case _ => None
+      }
+    def blockFunctionFargs(tag: String): Matcher =
+      (input: Seq[Node]) =>  input match {
+        case BlockFunc(tagVal,open,close,nested)+:tail if tagVal == tag => {
           Some(Match(1,Seq(nested)))
         }
         case _ => None
@@ -528,6 +557,34 @@ object NodeRewriter {
       }
       Seq(TextNode(newVal), TextNode(fIn.funcArg.head.tail))
     }
+    val okvir = (in: Input, m: Match) => {
+      val fun = in.head.asInstanceOf[Func]
+      val header = fun.bArgs.headOption.map(bArg => {
+        Seq(
+           TextNode("<div class=\"blok-definicija-naslov\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:White\"><strong>")
+          ,bArg.value.headOption.getOrElse(TextNode(""))
+          ,TextNode("</strong></span></span></div>")
+        )
+      }).getOrElse(Seq(TextNode("")))
+      val tail = fun.funcArg.head.tail
+      val body = TextNode("<div class=\"blok-definicija-sadrzaj\">")+:fun.funcArg.head.value:+TextNode("</div>\n<p>&nbsp;</p>"+tail)
+      (header++body).toSeq
+    }
+    val okvirPrimjer = (in: Input, m: Match) => {
+      val fun = in.head.asInstanceOf[Func]
+      val tail = fun.funcArg.head.tail
+      TextNode("<div class=\"blok-primjer-sadrzaj\">")+:fun.funcArg.head.value:+TextNode("</div>\n<p>&nbsp;</p>"+tail)
+    }
+    val flatBlockWrap = (open: String, close: String) =>
+      (in: Input, m: Match) => {
+        val flattened = flattenBlock(in,m)
+        TextNode(open)+:flattened:+TextNode(close)
+      }
+    val flatFuncWrap = (open: String, close: String) =>
+      (in: Input, m: Match) => {
+        val flattened = flattenFunc(in,m)
+        TextNode(open)+:flattened:+TextNode(close)
+      }
   }
 
 
