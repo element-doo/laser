@@ -130,10 +130,10 @@ object NodeRewriter {
     (Matchers.functionAlphaPrefixOrAlone("Udva"), Seq(Rewriters.removePrefix("Udva"))),
     (Matchers.functionAlphaPrefixOrAlone("BA"), Seq(Rewriters.removePrefix("BA"))),
     (Matchers.functionAlphaPrefixOrAlone("B"), Seq(Rewriters.removePrefix("B"))),
-    (Matchers.functionAlphaPrefixOrAlone("Bl"), Seq(Rewriters.simpleReplacePrefix("Bl","left"))),
-    (Matchers.functionAlphaPrefixOrAlone("Br"), Seq(Rewriters.simpleReplacePrefix("Br","right"))),
-    (Matchers.functionAlphaPrefixOrAlone("bl"), Seq(Rewriters.simpleReplacePrefix("bl","left"))),
-    (Matchers.functionAlphaPrefixOrAlone("br"), Seq(Rewriters.simpleReplacePrefix("br","right"))),
+    (Matchers.functionAlphaPrefixOrAlone("Bl"), Seq(Rewriters.simpleReplacePrefix("Bl","\\left"))),
+    (Matchers.functionAlphaPrefixOrAlone("Br"), Seq(Rewriters.simpleReplacePrefix("Br","\\right"))),
+    (Matchers.functionAlphaPrefixOrAlone("bl"), Seq(Rewriters.simpleReplacePrefix("bl","\\left"))),
+    (Matchers.functionAlphaPrefixOrAlone("br"), Seq(Rewriters.simpleReplacePrefix("br","\\right"))),
     (Matchers.functionAlphaPrefixOrAlone("ds"), Seq(Rewriters.removePrefix("ds"))),
 
 
@@ -165,10 +165,10 @@ object NodeRewriter {
     (Matchers.functionAlphaPrefixOrAlone("Udva"), Seq(Rewriters.removePrefix("Udva"))),
     (Matchers.functionAlphaPrefixOrAlone("BA"), Seq(Rewriters.removePrefix("BA"))),
     (Matchers.functionAlphaPrefixOrAlone("B"), Seq(Rewriters.removePrefix("B"))),
-    (Matchers.functionAlphaPrefixOrAlone("Bl"), Seq(Rewriters.simpleReplacePrefix("Bl","left"))),
-    (Matchers.functionAlphaPrefixOrAlone("Br"), Seq(Rewriters.simpleReplacePrefix("Br","right"))),
-    (Matchers.functionAlphaPrefixOrAlone("bl"), Seq(Rewriters.simpleReplacePrefix("bl","left"))),
-    (Matchers.functionAlphaPrefixOrAlone("br"), Seq(Rewriters.simpleReplacePrefix("br","right"))),
+    (Matchers.functionAlphaPrefixOrAlone("Bl"), Seq(Rewriters.simpleReplacePrefix("Bl","\\left"))),
+    (Matchers.functionAlphaPrefixOrAlone("Br"), Seq(Rewriters.simpleReplacePrefix("Br","\\right"))),
+    (Matchers.functionAlphaPrefixOrAlone("bl"), Seq(Rewriters.simpleReplacePrefix("bl","\\left"))),
+    (Matchers.functionAlphaPrefixOrAlone("br"), Seq(Rewriters.simpleReplacePrefix("br","\\right"))),
     (Matchers.functionAlphaPrefixOrAlone("ds"), Seq(Rewriters.removePrefix("ds"))),
 
 
@@ -285,7 +285,9 @@ object NodeRewriter {
     (Matchers.functionIgnoreCase("udva",0),Seq(Rewriters.remove)),
     (Matchers.functionIgnoreCase("utri",0),Seq(Rewriters.remove)),
     (Matchers.functionIgnoreCase("ucetiri",0),Seq(Rewriters.remove)),
-    (Matchers.functionIgnoreCase("upet",0),Seq(Rewriters.remove))
+    (Matchers.functionIgnoreCase("upet",0),Seq(Rewriters.remove)),
+
+    (Matchers.functionPrefix(".\\&#8201;"),Seq(Rewriters.simpleReplacePrefix(".\\&#8201;",".&#8201;")))
 
   )
 
