@@ -182,7 +182,6 @@ object NodeRewriter {
     (Matchers.ifBlock,              Seq(Rewriters.elseRemoval)),
     (Matchers.function("df",1),       Seq(Rewriters.boldBlock)),
     (Matchers.function("it",1),       Seq(Rewriters.italicBlock)),
-    (Matchers.function("df",1),       Seq(Rewriters.remove)),
     (Matchers.function("smallskip",0),Seq(Rewriters.remove)),
     (Matchers.function("bigskip",0),  Seq(Rewriters.remove)),
     (Matchers.innerFunctionPrefix("it"),    Seq(Rewriters.innerBlock("it"))),
@@ -467,7 +466,7 @@ object NodeRewriter {
     val boldBlock = (in: Input, m: Match) => {
       //type guaranteed by matcher
       val node = in.head.asInstanceOf[Func]
-      TextNode("<bold>") +: node.funcArg.head.value :+ TextNode("</bold>" + node.funcArg.head.tail)
+      TextNode("<span class=\"tekst-oznaceno\"><strong>") +: node.funcArg.head.value :+ TextNode("</strong></span>" + node.funcArg.head.tail)
     }
     val italicBlock = (in: Input, m: Match) => {
       //type guaranteed by matcher
