@@ -254,7 +254,7 @@ object NodeRewriter {
     (Matchers.functionPrefix("vglue"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("vskip"),Seq(Rewriters.remove)),
     (Matchers.functionPrefix("hskip"),Seq(Rewriters.remove)),
-    (Matchers.funcArg,Seq(Rewriters.flattenInner)),
+    //(Matchers.funcArg,Seq(Rewriters.flattenInner)),
     (Matchers.function("cm",0), Seq(Rewriters.simpleReplace(" cm"))),
     (Matchers.function("dm",0), Seq(Rewriters.simpleReplace(" dm"))),
     (Matchers.function("m",0), Seq(Rewriters.simpleReplace(" m"))),
